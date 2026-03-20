@@ -69,19 +69,19 @@ Once your `.env` is configured with your cPanel database, run the Drizzle migrat
 
 ```bash
 # Push schema to MySQL database
-pnpm run db:push
+pnpm db:push
 
 # Generate new migrations if you update the schema
-pnpm run db:generate
+pnpm db:generate
 
 # Optionally, open Drizzle Studio to inspect the cPanel DB directly
-pnpm run db:studio
+pnpm db:studio
 ```
 
 To sync the `better-auth` schema with Drizzle, you can run:
 
 ```bash
-pnpm run auth:schema
+pnpm auth:schema
 ```
 
 ### 5. Running the Application
