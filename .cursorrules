@@ -1,0 +1,37 @@
+# AI Coding Instructions
+
+## SvelteKit Navigation Resolution Rule
+
+Whenever generating, modifying, or refactoring SvelteKit components, you MUST manually import and use the `resolve` function from `$app/paths` for any navigation (`goto`) or anchor (`href`) links.
+
+### Context
+The project strictly enforces the `svelte/no-navigation-without-resolve` ESLint rule to ensure proper path resolution if the base path changes.
+
+### Syntax Rules
+1. **Always import resolve**: `import { resolve } from '$app/paths';`
+2. **Anchor Tags**: Use `{resolve('/path')}` instead of `"/path"`.
+3. **Goto Calls**: Use `goto(resolve('/path'))` instead of `goto('/path')`.
+
+### Examples
+
+**❌ BAD (Triggers Linter)**:
+```svelte
+<script>
+  import { goto } from '$app/navigation';
+  goto('/dashboard');
+</script>
+
+<a href="/login">Login</a>
+```
+
+**✅ GOOD (Passes Linter)**:
+```svelte
+<script>
+  import { goto } from '$app/navigation';
+  import { resolve } from '$app/paths';
+  
+  goto(resolve('/dashboard'));
+</script>
+
+<a href={resolve('/login')}>Login</a>
+```

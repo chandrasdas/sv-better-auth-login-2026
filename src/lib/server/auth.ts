@@ -7,7 +7,8 @@ import { db } from '$lib/server/db';
 import * as schema from '$lib/server/db/schema';
 
 export const auth = betterAuth({
-	baseURL: env.ORIGIN,
+	baseURL: env.BETTER_AUTH_URL,
+	trustedOrigins: ['http://localhost:5173'],
 	secret: env.BETTER_AUTH_SECRET,
 	database: drizzleAdapter(db, { provider: 'mysql', schema }),
 	emailAndPassword: { enabled: true },

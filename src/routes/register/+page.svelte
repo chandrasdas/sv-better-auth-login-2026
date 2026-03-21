@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { authClient } from '$lib/auth-client';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { fade, slide } from 'svelte/transition';
 
 	let email = $state('');
@@ -35,6 +36,14 @@
 </svelte:head>
 
 <div class="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 font-sans text-slate-100 selection:bg-indigo-500/30">
+	<!-- Back to Home Link -->
+	<a href={resolve('/')} class="absolute top-6 left-6 md:top-8 md:left-8 z-50 flex items-center gap-2 text-sm font-medium text-slate-400 transition hover:text-white">
+		<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+		</svg>
+		Back to Home
+	</a>
+
 	<!-- Ambient Background Gradients -->
 	<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-900/40 via-slate-950 to-slate-950"></div>
 	<div class="absolute -left-[10%] top-[20%] h-[500px] w-[500px] rounded-full bg-blue-600/20 blur-[120px]"></div>
@@ -122,7 +131,7 @@
 
 		<p class="mt-8 text-center text-sm text-slate-400">
 			Already have an account?
-			<a href="/login" class="font-medium text-indigo-400 hover:text-indigo-300 transition-colors">Sign in here</a>
+			<a href={resolve('/login')} class="font-medium text-indigo-400 hover:text-indigo-300 transition-colors">Sign in here</a>
 		</p>
 	</div>
 </div>
