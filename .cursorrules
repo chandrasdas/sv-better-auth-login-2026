@@ -1,5 +1,23 @@
 # AI Coding Instructions
 
+## Project Overview
+
+You are working on **NextGen App**, a modern, high-performance web application template.
+- **Framework**: SvelteKit (with Node adapter)
+- **Styling**: Tailwind CSS v4
+- **Authentication**: Better-Auth (`better-auth`)
+- **Database ORM**: Drizzle ORM (`drizzle-orm`, `drizzle-kit`)
+- **Database**: MySQL (hosted on cPanel, accessed via `mysql2`)
+- **Package Manager**: `pnpm`
+
+### General Development Guidelines
+1. **Package Manager**: Always use `pnpm` for installing dependencies and running scripts (e.g., `pnpm install`, `pnpm dev`, `pnpm db:push`).
+2. **SvelteKit Types**: When creating new routes or components (e.g., `src/routes/new-page/+page.svelte`), always regenerate SvelteKit types to avoid strict TypeScript route errors. Run `pnpm run prepare` (which executes `svelte-kit sync`).
+3. **Database Iteration**: When updating the database schema:
+   - Use `pnpm db:push` to apply changes directly to the remote MySQL database.
+   - Use `pnpm db:generate` to generate migration files.
+   - For Better-Auth schema sync, use `pnpm auth:schema`.
+
 ## SvelteKit Navigation Resolution Rule
 
 Whenever generating, modifying, or refactoring SvelteKit components, you MUST manually import and use the `resolve` function from `$app/paths` for any navigation (`goto`) or anchor (`href`) links.

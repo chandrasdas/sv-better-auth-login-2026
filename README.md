@@ -1,15 +1,17 @@
-# Better-Auth Login Test (SvelteKit)
+# NextGen App
 
-This project is designed to test a simple authentication flow (login/registration) using **[Better-Auth](https://better-auth.com/)** within a **SvelteKit** application, connecting directly to a **MySQL** database hosted on **cPanel**.
+A beautiful, modern, and high-performance template built with **SvelteKit**, **Tailwind CSS v4**, and **[Better-Auth](https://better-auth.com/)**. Everything you need to launch your next big idea today.
+
+This project is configured to connect to a **MySQL** database (ideal for cPanel hosting) using **Drizzle ORM**.
 
 ## 🚀 Tech Stack & Dependencies
 
 - **Framework**: [SvelteKit](https://kit.svelte.dev/) with Node adapter.
 - **Authentication**: `better-auth` and `@better-auth/cli` for secure, modern authentication.
-- **ORM / Database Tooling**: `drizzle-orm` and `drizzle-kit` for schema management and type-safe database access.
-- **Database Driver**: `mysql2` designed to interact with the cPanel-hosted MySQL database server.
+- **Database ORM**: `drizzle-orm` and `drizzle-kit` for schema management and type-safe database access.
+- **Database Driver**: `mysql2` designed to interact with your MySQL database server.
 - **Styling**: Tailwind CSS v4 (`tailwindcss`, `@tailwindcss/vite`, `@tailwindcss/forms`).
-- **Tooling**: Vite, TypeScript, ESLint, Prettier.
+- **Tooling**: Vite, TypeScript, ESLint, Prettier, `pnpm`.
 
 ## 📂 Project Structure
 
@@ -22,8 +24,11 @@ This project is designed to test a simple authentication flow (login/registratio
 │   │   │   └── db/          # Drizzle ORM schema and database connection setup
 │   │   └── assets/          # Shared components and client-side utilities
 │   ├── routes/              # SvelteKit pages, layouts, and API routes
+│   │   ├── about/           # About Us page
 │   │   ├── demo/            # Demo pages
-│   │   ├── +page.svelte     # Main application landing/login page
+│   │   ├── login/           # Login flow
+│   │   ├── register/        # Registration flow
+│   │   ├── +page.svelte     # Main application landing page
 │   │   └── +layout.svelte   # Top-level layout
 │   └── app.html             # Main HTML entry point
 ├── static/                  # Static assets (images, fonts, etc.)
@@ -40,14 +45,15 @@ This project is designed to test a simple authentication flow (login/registratio
 ### 1. Prerequisites
 
 - Node.js installed (v20+ recommended).
-- Access to a cPanel hosting account with a MySQL database created.
+- Access to a MySQL database (e.g., via a cPanel hosting account).
+- `pnpm` installed globally.
 
 ### 2. Environment Variables
 
-Create a `.env` file in the root of your project based on `.env.example`. Make sure to configure your cPanel MySQL connection and Better-Auth secrets:
+Create a `.env` file in the root of your project based on `.env.example`. Make sure to configure your MySQL connection and Better-Auth secrets:
 
 ```env
-# Database connection string (replace with your cPanel MySQL credentials)
+# Database connection string (replace with your MySQL credentials)
 DATABASE_URL="mysql://cpanel_user:password@cpanel_host_or_ip:3306/database_name"
 
 # Better Auth required variables
@@ -57,7 +63,7 @@ BETTER_AUTH_URL="http://localhost:5173"
 
 ### 3. Installation
 
-Install the project dependencies using your preferred package manager (pnpm is configured in this workspace):
+Install the project dependencies using `pnpm` (which is configured in this workspace):
 
 ```bash
 pnpm install
@@ -65,7 +71,7 @@ pnpm install
 
 ### 4. Database Setup
 
-Once your `.env` is configured with your cPanel database, run the Drizzle migrations to generate the auth schema in your remote database:
+Once your `.env` is configured with your database credentials, run the Drizzle migrations to generate the auth schema in your remote database:
 
 ```bash
 # Push schema to MySQL database
@@ -74,7 +80,7 @@ pnpm db:push
 # Generate new migrations if you update the schema
 pnpm db:generate
 
-# Optionally, open Drizzle Studio to inspect the cPanel DB directly
+# Optionally, open Drizzle Studio to inspect the DB directly
 pnpm db:studio
 ```
 
@@ -92,7 +98,7 @@ To start the Vite development server:
 pnpm dev
 ```
 
-Visit `http://localhost:5173` to test the login functionality!
+Visit `http://localhost:5173` to test the template, login, and registration functionality!
 
 ## 🚢 Deployment
 
@@ -104,4 +110,4 @@ To build the production version, run:
 pnpm build
 ```
 
-And start the server using the generated entry point in the `build` folder.
+Then start the server using the generated entry point in the `build` folder.
