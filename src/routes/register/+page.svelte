@@ -24,7 +24,11 @@
 		loading = false;
 
 		if (registerError) {
-			error = registerError.message || 'An error occurred during registration.';
+			if (registerError.status === 500) {
+				error = 'Database connection error or internal server error. Please try again later.';
+			} else {
+				error = registerError.message || 'An error occurred during registration.';
+			}
 		} else {
 			await goto('/dashboard');
 		}

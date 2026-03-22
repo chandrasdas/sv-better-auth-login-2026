@@ -22,7 +22,11 @@
 		loading = false;
 
 		if (loginError) {
-			error = loginError.message || 'Invalid email or password.';
+			if (loginError.status === 500) {
+				error = 'Database connection error or internal server error. Please try again later.';
+			} else {
+				error = loginError.message || 'Invalid email or password.';
+			}
 		} else {
 			await goto(resolve('/dashboard'));
 		}
