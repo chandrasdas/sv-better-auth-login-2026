@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { authClient } from '$lib/auth-client';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { fade } from 'svelte/transition';
 
 	let { data } = $props();
@@ -10,7 +11,7 @@
 		loading = true;
 		await authClient.signOut();
 		loading = false;
-		await goto('/login');
+		await goto(resolve('/login'));
 	}
 </script>
 
@@ -23,15 +24,18 @@
 	<nav class="sticky top-0 z-50 border-b border-white/5 bg-slate-950/50 backdrop-blur-xl">
 		<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 			<div class="flex h-16 items-center justify-between">
-				<div class="flex items-center gap-3">
+				<a href={resolve('/')} class="flex items-center gap-3 group transition hover:opacity-80">
 					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/20">
 						<svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
 						</svg>
 					</div>
 					<span class="text-xl font-bold tracking-tight text-white">NextGen<span class="text-indigo-400">App</span></span>
-				</div>
+				</a>
 				<div class="flex items-center gap-4">
+					<a href={resolve('/')} class="text-sm font-medium text-slate-300 hover:text-white transition">
+						Home
+					</a>
 					<div class="hidden md:block">
 						<span class="text-sm font-medium text-slate-300">{data.user?.name}</span>
 						<span class="ml-2 rounded-full bg-white/5 px-2.5 py-1 text-xs font-medium text-slate-400 border border-white/5">{data.user?.email}</span>
