@@ -3,6 +3,7 @@
 ## Project Overview
 
 You are working on **NextGen App**, a modern, high-performance web application template.
+
 - **Framework**: SvelteKit (with Node adapter)
 - **Styling**: Tailwind CSS v4
 - **Authentication**: Better-Auth (`better-auth`)
@@ -11,6 +12,7 @@ You are working on **NextGen App**, a modern, high-performance web application t
 - **Package Manager**: `pnpm`
 
 ### General Development Guidelines
+
 1. **Package Manager**: Always use `pnpm` for installing dependencies and running scripts (e.g., `pnpm install`, `pnpm dev`, `pnpm db:push`).
 2. **SvelteKit Types**: When creating new routes or components (e.g., `src/routes/new-page/+page.svelte`), always regenerate SvelteKit types to avoid strict TypeScript route errors. Run `pnpm run prepare` (which executes `svelte-kit sync`).
 3. **Database Iteration**: When updating the database schema:
@@ -23,9 +25,11 @@ You are working on **NextGen App**, a modern, high-performance web application t
 Whenever generating, modifying, or refactoring SvelteKit components, you MUST manually import and use the `resolve` function from `$app/paths` for any navigation (`goto`) or anchor (`href`) links.
 
 ### Context
+
 The project strictly enforces the `svelte/no-navigation-without-resolve` ESLint rule to ensure proper path resolution if the base path changes.
 
 ### Syntax Rules
+
 1. **Always import resolve**: `import { resolve } from '$app/paths';`
 2. **Anchor Tags**: Use `{resolve('/path')}` instead of `"/path"`.
 3. **Goto Calls**: Use `goto(resolve('/path'))` instead of `goto('/path')`.
@@ -33,22 +37,24 @@ The project strictly enforces the `svelte/no-navigation-without-resolve` ESLint 
 ### Examples
 
 **❌ BAD (Triggers Linter)**:
+
 ```svelte
 <script>
-  import { goto } from '$app/navigation';
-  goto('/dashboard');
+	import { goto } from '$app/navigation';
+	goto('/dashboard');
 </script>
 
 <a href="/login">Login</a>
 ```
 
 **✅ GOOD (Passes Linter)**:
+
 ```svelte
 <script>
-  import { goto } from '$app/navigation';
-  import { resolve } from '$app/paths';
-  
-  goto(resolve('/dashboard'));
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
+
+	goto(resolve('/dashboard'));
 </script>
 
 <a href={resolve('/login')}>Login</a>
