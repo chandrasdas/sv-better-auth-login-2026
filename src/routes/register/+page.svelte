@@ -30,7 +30,7 @@
 				error = registerError.message || 'An error occurred during registration.';
 			}
 		} else {
-			await goto('/dashboard');
+			await goto(resolve('/dashboard'));
 		}
 	}
 </script>
@@ -49,22 +49,22 @@
 	</a>
 
 	<!-- Ambient Background Gradients -->
-	<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-900/40 via-slate-950 to-slate-950"></div>
+	<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-indigo-900/40 via-slate-950 to-slate-950"></div>
 	<div class="absolute -left-[10%] top-[20%] h-[500px] w-[500px] rounded-full bg-blue-600/20 blur-[120px]"></div>
 	<div class="absolute -bottom-[10%] right-[10%] h-[400px] w-[400px] rounded-full bg-violet-600/20 blur-[120px]"></div>
 
 	<div class="relative z-10 w-full max-w-md p-8" in:fade={{ duration: 600, delay: 100 }}>
 		<div class="mb-10 text-center">
-			<div class="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/20 ring-1 ring-white/10">
+			<div class="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/20 ring-1 ring-white/10">
 				<svg class="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
 				</svg>
 			</div>
-			<h1 class="bg-gradient-to-br from-white to-slate-400 bg-clip-text text-3xl font-bold tracking-tight text-transparent">Create an account</h1>
+			<h1 class="bg-linear-to-br from-white to-slate-400 bg-clip-text text-3xl font-bold tracking-tight text-transparent">Create an account</h1>
 			<p class="mt-3 text-sm text-slate-400">Join us to access the exclusive dashboard.</p>
 		</div>
 
-		<div class="rounded-3xl border border-white/5 bg-white/[0.02] p-8 shadow-2xl backdrop-blur-3xl">
+		<div class="rounded-3xl border border-white/5 bg-white/2 p-8 shadow-2xl backdrop-blur-3xl">
 			<form onsubmit={handleRegister} class="space-y-5">
 				{#if error}
 					<div in:slide class="rounded-xl bg-red-500/10 border border-red-500/20 p-4 text-sm text-red-400">
@@ -119,7 +119,7 @@
 					disabled={loading}
 					class="group relative mt-2 flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-indigo-500 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-70"
 				>
-					<div class="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(100%)]">
+					<div class="absolute inset-0 flex h-full w-full justify-center transform-[skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:transform-[skew(-12deg)_translateX(100%)]">
 						<div class="relative h-full w-8 bg-white/20"></div>
 					</div>
 					{#if loading}

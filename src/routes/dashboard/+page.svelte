@@ -25,7 +25,7 @@
 		<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 			<div class="flex h-16 items-center justify-between">
 				<a href={resolve('/')} class="flex items-center gap-3 group transition hover:opacity-80">
-					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/20">
+					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/20">
 						<svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
 						</svg>
@@ -61,11 +61,11 @@
 
 	<main class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8" in:fade={{ duration: 400 }}>
 		<!-- Welcome Section -->
-		<div class="mb-12 relative overflow-hidden rounded-3xl border border-white/5 bg-gradient-to-b from-white/5 to-transparent p-8 sm:p-10 shadow-2xl">
+		<div class="mb-12 relative overflow-hidden rounded-3xl border border-white/5 bg-linear-to-b from-white/5 to-transparent p-8 sm:p-10 shadow-2xl">
 			<div class="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-indigo-500/10 blur-[80px]"></div>
 			<div class="relative z-10">
 				<h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-					Welcome back, <span class="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">{data.user?.name?.split(' ')[0] || 'User'}</span>
+					Welcome back, <span class="bg-linear-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">{data.user?.name?.split(' ')[0] || 'User'}</span>
 				</h1>
 				<p class="mt-4 max-w-2xl text-lg text-slate-400">
 					This is your secure dashboard. You've successfully authenticated using Better-Auth with SvelteKit.
@@ -76,7 +76,7 @@
 		<!-- Dashboard Grid -->
 		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 			<!-- Profile Card -->
-			<div class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] p-6 transition hover:bg-white/[0.04]">
+			<div class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/2 p-6 transition hover:bg-white/4">
 				<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400 ring-1 ring-indigo-500/20 group-hover:bg-indigo-500/20 group-hover:text-indigo-300">
 					<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -91,7 +91,7 @@
 			</div>
 
 			<!-- Security Card -->
-			<div class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] p-6 transition hover:bg-white/[0.04]">
+			<div class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/2 p-6 transition hover:bg-white/4">
 				<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20 group-hover:bg-emerald-500/20 group-hover:text-emerald-300">
 					<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -104,7 +104,7 @@
 			</div>
 			
 			<!-- Activity Card -->
-			<div class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] p-6 transition hover:bg-white/[0.04] sm:col-span-2 lg:col-span-1">
+			<div class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/2 p-6 transition hover:bg-white/4 sm:col-span-2 lg:col-span-1">
 				<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/20 group-hover:bg-amber-500/20 group-hover:text-amber-300">
 					<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
