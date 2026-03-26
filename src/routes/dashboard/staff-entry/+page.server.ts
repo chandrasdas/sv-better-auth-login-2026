@@ -15,10 +15,19 @@ export const load: PageServerLoad = async ({ locals }) => {
 		where: eq(staff.userId, user.id)
 	});
 
+	let existingStaffFormatted = null;
+	if (existingStaff) {
+		existingStaffFormatted = {
+			...existingStaff,
+			dateOfBirthFormatted: existingStaff.dateOfBirth ? existingStaff.dateOfBirth.toISOString().split('T')[0] : '',
+			dateOfJoiningFormatted: existingStaff.dateOfJoining ? existingStaff.dateOfJoining.toISOString().split('T')[0] : ''
+		};
+	}
+
 	return {
 		user: user,
 		hasFilledForm: !!existingStaff,
-		existingStaff
+		existingStaff: existingStaffFormatted
 	};
 };
 
@@ -49,7 +58,7 @@ export const actions: Actions = {
 		}
 
 		try {
-			await db.insert(staff).values({
+			const staffData = {
 				empId,
 				name,
 				status,
@@ -61,9 +70,36 @@ export const actions: Actions = {
 				qualification: qualification || null,
 				primarySubject: primarySubject || null,
 				userId: user.id
+			};
+
+			const existingStaff = await db.query.staff.findFirst({
+				where: eq(staff.userId, user.id)
 			});
 
-			return { success: true };
+			if (existingStaff) {
+				const normalizeDate = (d: Date | null) => d ? d.toISOString().split('T')[0] : null;
+				const hasChanges = 
+					existingStaff.empId !== staffData.empId ||
+					existingStaff.name !== staffData.name ||
+					existingStaff.status !== staffData.status ||
+					existingStaff.designation !== staffData.designation ||
+					(existingStaff.email || null) !== (staffData.email || null) ||
+					(existingStaff.phoneNo || null) !== (staffData.phoneNo || null) ||
+					(existingStaff.qualification || null) !== (staffData.qualification || null) ||
+					(existingStaff.primarySubject || null) !== (staffData.primarySubject || null) ||
+					normalizeDate(existingStaff.dateOfBirth) !== normalizeDate(staffData.dateOfBirth as Date | null) ||
+					normalizeDate(existingStaff.dateOfJoining) !== normalizeDate(staffData.dateOfJoining as Date | null);
+
+				if (hasChanges) {
+					await db.update(staff).set(staffData).where(eq(staff.userId, user.id));
+				} else {
+					return { success: true, noChanges: true };
+				}
+			} else {
+				await db.insert(staff).values(staffData);
+			}
+
+			return { success: true, noChanges: false };
 		} catch (error: unknown) {
 			const err = error as { code?: string };
 			console.error('Error inserting staff data:', err);

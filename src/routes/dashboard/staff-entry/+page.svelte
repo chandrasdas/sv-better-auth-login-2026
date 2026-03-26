@@ -25,34 +25,29 @@
 			</a>
 			<div>
 				<h1 class="text-3xl font-bold tracking-tight text-white">Staff Data Entry</h1>
-				<p class="mt-1 text-sm text-slate-400">Please provide your employment details below.</p>
+				<p class="mt-1 text-sm text-slate-400">Please provide or update your employment details below.</p>
 			</div>
 		</div>
 
-		{#if data.hasFilledForm}
+		{#if form?.success}
 			<div class="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-8 text-center backdrop-blur-sm">
-				<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">
-					<svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-					</svg>
-				</div>
-				<h2 class="text-2xl font-bold text-white">Record Already Exists</h2>
-				<p class="mt-2 text-slate-400">You have already submitted your staff details (Emp ID: {data.existingStaff?.empId}).</p>
-				<div class="mt-6">
-					<a href={resolve('/dashboard')} class="inline-flex items-center justify-center rounded-xl bg-white/10 px-6 py-3 font-medium text-white transition hover:bg-white/20">
-						Return to Dashboard
-					</a>
-				</div>
-			</div>
-		{:else if form?.success}
-			<div class="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-8 text-center backdrop-blur-sm">
-				<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">
-					<svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-					</svg>
-				</div>
-				<h2 class="text-2xl font-bold text-white">Successfully Submitted!</h2>
-				<p class="mt-2 text-slate-400">Your staff details have been saved to the database.</p>
+				{#if form?.noChanges}
+					<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-500/10 text-blue-400">
+						<svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+						</svg>
+					</div>
+					<h2 class="text-2xl font-bold text-white">No data changed</h2>
+					<p class="mt-2 text-slate-400">Your staff details are already up to date.</p>
+				{:else}
+					<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">
+						<svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+						</svg>
+					</div>
+					<h2 class="text-2xl font-bold text-white">Successfully Submitted!</h2>
+					<p class="mt-2 text-slate-400">Your staff details have been saved to the database.</p>
+				{/if}
 				<div class="mt-6">
 					<a href={resolve('/dashboard')} class="inline-flex items-center justify-center rounded-xl bg-indigo-500 px-6 py-3 font-medium text-white transition hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
 						Return to Dashboard
@@ -89,7 +84,7 @@
 						<div>
 							<label for="empId" class="block text-sm font-medium text-slate-300">Employee ID <span class="text-red-400">*</span></label>
 							<input type="text" name="empId" id="empId" required maxlength="8"
-								value={form?.data?.empId || ''}
+								value={form?.data?.empId || data.existingStaff?.empId || ''}
 								class="mt-2 block w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 transition focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500"
 								placeholder="e.g. EMP12345" />
 						</div>
@@ -98,7 +93,7 @@
 						<div>
 							<label for="name" class="block text-sm font-medium text-slate-300">Full Name <span class="text-red-400">*</span></label>
 							<input type="text" name="name" id="name" required maxlength="255"
-								value={form?.data?.name || data.user?.name || ''}
+								value={form?.data?.name || data.existingStaff?.name || data.user?.name || ''}
 								class="mt-2 block w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 transition focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500"
 								placeholder="John Doe" />
 						</div>
@@ -108,9 +103,9 @@
 							<label for="status" class="block text-sm font-medium text-slate-300">Status <span class="text-red-400">*</span></label>
 							<select name="status" id="status" required
 								class="mt-2 block w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-3 text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-								<option value="" disabled selected={!form?.data?.status}>Select Status</option>
-								<option value="Permanent" selected={form?.data?.status === 'Permanent'}>Permanent</option>
-								<option value="Contractual" selected={form?.data?.status === 'Contractual'}>Contractual</option>
+								<option value="" disabled selected={!(form?.data?.status || data.existingStaff?.status)}>Select Status</option>
+								<option value="Permanent" selected={(form?.data?.status || data.existingStaff?.status) === 'Permanent'}>Permanent</option>
+								<option value="Contractual" selected={(form?.data?.status || data.existingStaff?.status) === 'Contractual'}>Contractual</option>
 							</select>
 						</div>
 
@@ -119,12 +114,12 @@
 							<label for="designation" class="block text-sm font-medium text-slate-300">Designation <span class="text-red-400">*</span></label>
 							<select name="designation" id="designation" required
 								class="mt-2 block w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-3 text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-								<option value="" disabled selected={!form?.data?.designation}>Select Designation</option>
-								<option value="Headmaster" selected={form?.data?.designation === 'Headmaster'}>Headmaster</option>
-								<option value="Assistant Teacher" selected={form?.data?.designation === 'Assistant Teacher'}>Assistant Teacher</option>
-								<option value="Librarian" selected={form?.data?.designation === 'Librarian'}>Librarian</option>
-								<option value="Clerk" selected={form?.data?.designation === 'Clerk'}>Clerk</option>
-								<option value="Group-D" selected={form?.data?.designation === 'Group-D'}>Group-D</option>
+								<option value="" disabled selected={!(form?.data?.designation || data.existingStaff?.designation)}>Select Designation</option>
+								<option value="Headmaster" selected={(form?.data?.designation || data.existingStaff?.designation) === 'Headmaster'}>Headmaster</option>
+								<option value="Assistant Teacher" selected={(form?.data?.designation || data.existingStaff?.designation) === 'Assistant Teacher'}>Assistant Teacher</option>
+								<option value="Librarian" selected={(form?.data?.designation || data.existingStaff?.designation) === 'Librarian'}>Librarian</option>
+								<option value="Clerk" selected={(form?.data?.designation || data.existingStaff?.designation) === 'Clerk'}>Clerk</option>
+								<option value="Group-D" selected={(form?.data?.designation || data.existingStaff?.designation) === 'Group-D'}>Group-D</option>
 							</select>
 						</div>
 
@@ -132,7 +127,7 @@
 						<div class="sm:col-span-2">
 							<label for="email" class="block text-sm font-medium text-slate-300">Email Address (Editable)</label>
 							<input type="email" name="email" id="email" maxlength="255"
-								value={form?.data?.email || data.user?.email || ''}
+								value={form?.data?.email || data.existingStaff?.email || data.user?.email || ''}
 								class="mt-2 block w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 transition focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500"
 								placeholder="john@example.com" />
 							<p class="mt-1 text-xs text-slate-500">This will be used for official communications.</p>
@@ -142,7 +137,7 @@
 						<div>
 							<label for="phoneNo" class="block text-sm font-medium text-slate-300">Phone Number</label>
 							<input type="tel" name="phoneNo" id="phoneNo" maxlength="15"
-								value={form?.data?.phoneNo || ''}
+								value={form?.data?.phoneNo || data.existingStaff?.phoneNo || ''}
 								class="mt-2 block w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 transition focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500"
 								placeholder="+1234567890" />
 						</div>
@@ -151,7 +146,7 @@
 						<div>
 							<label for="qualification" class="block text-sm font-medium text-slate-300">Qualification</label>
 							<input type="text" name="qualification" id="qualification" maxlength="255"
-								value={form?.data?.qualification || ''}
+								value={form?.data?.qualification || data.existingStaff?.qualification || ''}
 								class="mt-2 block w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 transition focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500"
 								placeholder="e.g. M.Sc, B.Ed" />
 						</div>
@@ -160,7 +155,7 @@
 						<div>
 							<label for="dateOfBirth" class="block text-sm font-medium text-slate-300">Date of Birth</label>
 							<input type="date" name="dateOfBirth" id="dateOfBirth"
-								value={form?.data?.dateOfBirth || ''}
+								value={form?.data?.dateOfBirth || data.existingStaff?.dateOfBirthFormatted || ''}
 								class="mt-2 block w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder-slate-500 transition focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
 						</div>
 
@@ -168,7 +163,7 @@
 						<div>
 							<label for="dateOfJoining" class="block text-sm font-medium text-slate-300">Date of Joining</label>
 							<input type="date" name="dateOfJoining" id="dateOfJoining"
-								value={form?.data?.dateOfJoining || ''}
+								value={form?.data?.dateOfJoining || data.existingStaff?.dateOfJoiningFormatted || ''}
 								class="mt-2 block w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder-slate-500 transition focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
 						</div>
 
@@ -176,7 +171,7 @@
 						<div class="sm:col-span-2">
 							<label for="primarySubject" class="block text-sm font-medium text-slate-300">Primary Subject (if applicable)</label>
 							<input type="text" name="primarySubject" id="primarySubject" maxlength="100"
-								value={form?.data?.primarySubject || ''}
+								value={form?.data?.primarySubject || data.existingStaff?.primarySubject || ''}
 								class="mt-2 block w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 transition focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500"
 								placeholder="e.g. Mathematics" />
 						</div>
@@ -195,7 +190,7 @@
 								</svg>
 								Saving Details...
 							{:else}
-								Save Staff Details
+								{data.existingStaff ? 'Update Staff Details' : 'Save Staff Details'}
 							{/if}
 						</button>
 					</div>
