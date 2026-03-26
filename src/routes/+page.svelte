@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { authClient } from '$lib/auth-client';
+	import { APP_NAME } from '$lib/config';
+	import LogoIcon from '$lib/components/LogoIcon.svelte';
 	let { data } = $props();
 
 	const authSession = authClient.useSession();
 </script>
 
 <svelte:head>
-	<title>Darpan | School Management Portal</title>
+	<title>{APP_NAME} | School Management Portal</title>
 </svelte:head>
 
 <div class="relative min-h-screen bg-slate-950 font-sans text-slate-100 overflow-hidden">
@@ -21,13 +23,9 @@
 		<div class="mx-auto max-w-7xl px-4 sm:px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
 			<div class="flex items-center gap-3">
 				<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-violet-600 shadow-lg">
-					<svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0v6M12 14l5-2.778" />
-					</svg>
+					<LogoIcon class="h-5 w-5 text-white" />
 				</div>
-				<span class="text-xl font-bold tracking-tight text-white">Darpan</span>
+				<span class="text-xl font-bold tracking-tight text-white">{APP_NAME}</span>
 			</div>
 
 			<div class="flex items-center gap-4 md:gap-6 flex-wrap justify-center">
@@ -54,7 +52,7 @@
 				<span class="bg-linear-to-r from-indigo-400 to-violet-500 bg-clip-text text-transparent">clarity & precision.</span>
 			</h1>
 			<p class="mb-10 text-lg text-slate-400 sm:text-xl max-w-2xl mx-auto leading-relaxed">
-				Darpan is a modern, comprehensive portal designed to streamline administrative tasks, track academic progress, and empower educators and students alike.
+				{APP_NAME} is a modern, comprehensive portal designed to streamline administrative tasks, track academic progress, and empower educators and students alike.
 			</p>
 			
 			<div class="flex flex-col sm:flex-row items-center justify-center gap-4">

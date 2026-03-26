@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { resolve } from '$app/paths';
+	import { APP_NAME } from '$lib/config';
 </script>
 
 <svelte:head>
-	<title>{$page.status} | NextGen App</title>
+	<title>{$page.status} | {APP_NAME}</title>
 </svelte:head>
 
 <div class="flex min-h-screen items-center justify-center bg-slate-950 font-sans text-slate-100">

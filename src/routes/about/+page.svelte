@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { APP_NAME } from '$lib/config';
+	import LogoIcon from '$lib/components/LogoIcon.svelte';
 </script>
 
 <svelte:head>
-	<title>About Us | NextGen App</title>
+	<title>About Us | {APP_NAME}</title>
 </svelte:head>
 
 <div class="relative min-h-screen bg-slate-950 font-sans text-slate-100 overflow-hidden">
@@ -17,11 +19,9 @@
 		<div class="mx-auto max-w-7xl px-4 sm:px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
 			<div class="flex items-center gap-3">
 				<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-violet-600 shadow-lg">
-					<svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-					</svg>
+					<LogoIcon class="h-5 w-5 text-white" />
 				</div>
-				<span class="text-lg font-bold tracking-tight text-white">NextGen App</span>
+				<span class="text-lg font-bold tracking-tight text-white">{APP_NAME}</span>
 			</div>
 
 			<div class="flex items-center gap-4 md:gap-8 flex-wrap justify-center">
@@ -87,7 +87,7 @@
 			
 			<div class="mt-24 pt-10 border-t border-white/10">
 				<p class="text-slate-500 text-sm">
-					© 2026 NextGen App. Built with precision and care.
+					© 2026 {APP_NAME}. Built with precision and care.
 				</p>
 			</div>
 		</div>

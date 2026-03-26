@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { APP_NAME } from '$lib/config';
 
 	// Placeholder for forgot password page
 </script>
 
 <svelte:head>
-	<title>Forgot Password | NextGen App</title>
+	<title>Forgot Password | {APP_NAME}</title>
 </svelte:head>
 
 <div class="flex min-h-screen items-center justify-center bg-slate-950 font-sans text-slate-100">

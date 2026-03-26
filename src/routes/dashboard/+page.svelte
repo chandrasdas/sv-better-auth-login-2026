@@ -3,6 +3,8 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { fade } from 'svelte/transition';
+	import { APP_NAME } from '$lib/config';
+	import LogoIcon from '$lib/components/LogoIcon.svelte';
 
 	let { data } = $props();
 	let loading = $state(false);
@@ -16,7 +18,7 @@
 </script>
 
 <svelte:head>
-	<title>Dashboard | NextGen App</title>
+	<title>Dashboard | {APP_NAME}</title>
 </svelte:head>
 
 <div class="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500/30">
@@ -26,11 +28,9 @@
 			<div class="flex h-16 items-center justify-between">
 				<a href={resolve('/')} class="flex items-center gap-3 group transition hover:opacity-80">
 					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/20">
-						<svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-						</svg>
+						<LogoIcon class="h-4 w-4 text-white" />
 					</div>
-					<span class="text-xl font-bold tracking-tight text-white">NextGen<span class="text-indigo-400">App</span></span>
+					<span class="text-xl font-bold tracking-tight text-white">{APP_NAME}</span>
 				</a>
 				<div class="flex items-center gap-4">
 					<a href={resolve('/')} class="text-sm font-medium text-slate-300 hover:text-white transition">

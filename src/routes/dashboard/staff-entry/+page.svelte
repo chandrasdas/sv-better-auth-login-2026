@@ -3,6 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import { resolve } from '$app/paths';
 	import type { ActionData, PageData } from './$types';
+	import { APP_NAME } from '$lib/config';
 
 	let { data, form } = $props<{ data: PageData; form: ActionData }>();
 	
@@ -10,7 +11,7 @@
 </script>
 
 <svelte:head>
-	<title>Staff Data Entry | NextGen App</title>
+	<title>Staff Data Entry | {APP_NAME}</title>
 </svelte:head>
 
 <div class="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500/30 py-12 px-4 sm:px-6 lg:px-8">
