@@ -21,6 +21,8 @@ export const user = mysqlTable("user", {
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
   role: mysqlEnum("role", ["admin", "teacher", "staff"]).default("teacher").notNull(),
+  failedOtpAttempts: int("failed_otp_attempts").default(0).notNull(),
+  lockedUntil: timestamp("locked_until", { fsp: 3, mode: 'date' }),
   createdAt: timestamp("created_at", { fsp: 3 }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { fsp: 3 }).defaultNow().notNull(),
 }, (table) => [
