@@ -1,8 +1,8 @@
 import { json } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
-import { verification, allowedStaff } from '$lib/server/db/auth.schema';
+import { verification } from '$lib/server/db/auth.schema';
 import { sendEmail } from '$lib/server/email';
-import { eq, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 export async function POST({ request }) {
     try {

@@ -1,8 +1,16 @@
-# NextGen App
+# Darpan
 
 A beautiful, modern, and high-performance template built with **SvelteKit**, **Tailwind CSS v4**, and **[Better-Auth](https://better-auth.com/)**. Everything you need to launch your next big idea today.
 
-This project is configured to connect to a **MySQL** database (ideal for cPanel hosting) using **Drizzle ORM**.
+This project is configured to connect to a **MySQL** database (ideal for cPanel hosting) using **Drizzle ORM**, and includes robust authentication features like email verification, password reset, and Role-Based Access Control (RBAC) specifically tailored for restricted staff access.
+
+## ✨ Features
+
+- **Role-Based Access Control (RBAC)**: Manage user roles (`staff`, `admin`, etc.) with built-in sessions.
+- **Restricted Staff Registration**: Only pre-authorized staff members (verified against a database table) can register for accounts.
+- **Email Verification**: Built-in Nodemailer utility with `better-auth` integration to mandate email verification before account creation.
+- **Password Management**: Fully functional "Forget Password" and password reset flows.
+- **Modern UI**: Styled with Tailwind CSS v4 for a premium and dynamic aesthetic.
 
 ## 🚀 Tech Stack & Dependencies
 
@@ -12,6 +20,7 @@ This project is configured to connect to a **MySQL** database (ideal for cPanel 
 - **Database Driver**: `mysql2` designed to interact with your MySQL database server.
 - **Styling**: Tailwind CSS v4 (`tailwindcss`, `@tailwindcss/vite`, `@tailwindcss/forms`).
 - **Tooling**: Vite, TypeScript, ESLint, Prettier, `pnpm`.
+- **Mailing**: `nodemailer` for authentication emails.
 
 ## 📂 Project Structure
 
@@ -20,14 +29,17 @@ This project is configured to connect to a **MySQL** database (ideal for cPanel 
 ├── src/
 │   ├── lib/
 │   │   ├── server/
-│   │   │   ├── auth.ts      # Better-Auth configuration
-│   │   │   └── db/          # Drizzle ORM schema and database connection setup
+│   │   │   ├── auth.ts      # Better-Auth configuration (Plugins, RBAC)
+│   │   │   ├── db/          # Drizzle ORM schema and DB connection
+│   │   │   └── email.ts     # Nodemailer configuration
 │   │   └── assets/          # Shared components and client-side utilities
 │   ├── routes/              # SvelteKit pages, layouts, and API routes
 │   │   ├── about/           # About Us page
+│   │   ├── dashboard/       # Protected dashboard area
 │   │   ├── demo/            # Demo pages
+│   │   ├── forgot-password/ # Password reset flow
 │   │   ├── login/           # Login flow
-│   │   ├── register/        # Registration flow
+│   │   ├── register/        # Registration flow (Restricted)
 │   │   ├── +page.svelte     # Main application landing page
 │   │   └── +layout.svelte   # Top-level layout
 │   └── app.html             # Main HTML entry point
@@ -59,6 +71,10 @@ DATABASE_URL="mysql://cpanel_user:password@cpanel_host_or_ip:3306/database_name"
 # Better Auth required variables
 BETTER_AUTH_SECRET="your-strong-random-secret"
 BETTER_AUTH_URL="http://localhost:5173"
+
+# Email Configuration
+EMAIL_USER="your-email@example.com"
+EMAIL_PASSWORD="your-email-password"
 ```
 
 ### 3. Installation
@@ -98,7 +114,7 @@ To start the Vite development server:
 pnpm dev
 ```
 
-Visit `http://localhost:5173` to test the template, login, and registration functionality!
+Visit `http://localhost:5173` to test the template, login, and restricted registration functionality!
 
 ## 🚢 Deployment
 
