@@ -38,6 +38,11 @@
 					</a>
 					<div class="hidden md:block">
 						<span class="text-sm font-medium text-slate-300">{data.user?.name}</span>
+						{#if data.user?.role}
+							<span class="ml-2 rounded-md bg-indigo-500/20 px-2 py-0.5 text-xs font-semibold text-indigo-300 border border-indigo-500/30 uppercase tracking-wide">
+								{data.user.role}
+							</span>
+						{/if}
 						<span class="ml-2 rounded-full bg-white/5 px-2.5 py-1 text-xs font-medium text-slate-400 border border-white/5">{data.user?.email}</span>
 					</div>
 					<button

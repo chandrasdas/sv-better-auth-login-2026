@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1774766666424,
+      "tag": "0000_steady_starfox",
+      "breakpoints": true
+    }
+  ]
+}
