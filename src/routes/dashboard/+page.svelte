@@ -13,7 +13,7 @@
 		loading = true;
 		await authClient.signOut();
 		loading = false;
-		await goto(resolve('/login'));
+		await goto(resolve('/login'), { invalidateAll: true });
 	}
 </script>
 
@@ -43,7 +43,6 @@
 								{data.user.role}
 							</span>
 						{/if}
-						<span class="ml-2 rounded-full bg-white/5 px-2.5 py-1 text-xs font-medium text-slate-400 border border-white/5">{data.user?.email}</span>
 					</div>
 					<button
 						onclick={handleLogout}
@@ -123,6 +122,23 @@
 					Your account is protected by industry-standard encryption and secure session management.
 				</p>
 			</div>
+			<!-- Admin: Allowed Staff Card -->
+			{#if data.user?.role === 'admin'}
+			<a href={resolve('/dashboard/admin/allowed-staff')} class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/2 p-6 transition hover:bg-white/4 block">
+				<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400 ring-1 ring-purple-500/20 group-hover:bg-purple-500/20 group-hover:text-purple-300 transition">
+					<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+					</svg>
+				</div>
+				<h3 class="font-semibold text-white">Allowed Staff Management</h3>
+				<p class="mt-2 text-sm text-slate-400">
+					View, add, edit, or remove approved staff members from the registry.
+				</p>
+				<div class="mt-4 flex items-center text-sm font-medium text-purple-400 opacity-0 transition-opacity group-hover:opacity-100">
+					Manage Staff <svg class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+				</div>
+			</a>
+			{/if}
 			
 			<!-- Activity Card -->
 			<div class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/2 p-6 transition hover:bg-white/4 sm:col-span-2 lg:col-span-3">
