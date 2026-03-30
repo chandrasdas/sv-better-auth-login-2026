@@ -20,6 +20,9 @@ export const user = mysqlTable("user", {
   email: varchar("email", { length: 255 }).notNull(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
+  role: mysqlEnum("role", ["admin", "teacher", "staff"]).default("teacher").notNull(),
+  failedOtpAttempts: int("failed_otp_attempts").default(0).notNull(),
+  lockedUntil: timestamp("locked_until", { fsp: 3, mode: 'date' }),
   createdAt: timestamp("created_at", { fsp: 3 }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { fsp: 3 }).defaultNow().notNull(),
 }, (table) => [
@@ -74,6 +77,14 @@ export const verification = mysqlTable("verification", {
 ]);
 
 // --- APPLICATION TABLES ---
+
+export const allowedStaff = mysqlTable("allowed_staff", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 255 }).unique().notNull(),
+  name: varchar("name", { length: 255 }),
+  role: mysqlEnum("role", ["admin", "teacher", "staff"]).default("teacher").notNull(),
+  isAllowed: boolean("is_allowed").default(true).notNull(),
+});
 
 export const staff = mysqlTable("staff", {
   empId: varchar("emp_id", { length: 8 }).primaryKey(),

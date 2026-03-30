@@ -15,3 +15,4 @@ const handleBetterAuth: Handle = async ({ event, resolve }) => {
 };
 
 export const handle: Handle = handleBetterAuth;
+
