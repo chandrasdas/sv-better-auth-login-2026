@@ -3,8 +3,12 @@ import mysql from 'mysql2/promise';
 import * as schema from './schema';
 import { env } from '$env/dynamic/private';
 
-if (!env.DATABASE_URL) throw new Error('DATABASE_URL is not set');
-
-const client = mysql.createPool(env.DATABASE_URL);
+const client = mysql.createPool({
+	host: 'localhost',
+	user: 'rkmvvmm1_tuser',
+	password: 'Test_2026',
+	database: 'rkmvvmm1_test2026',
+	port: env.DB_PORT ? Number(env.DB_PORT) : 3306
+});
 
 export const db = drizzle(client, { schema, mode: 'default' });
