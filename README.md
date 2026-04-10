@@ -2,7 +2,7 @@
 
 A beautiful, modern, and high-performance template built with **SvelteKit**, **Tailwind CSS v4**, and **[Better-Auth](https://better-auth.com/)**. Everything you need to launch your next big idea today.
 
-This project is configured to connect to a **MySQL** database (ideal for cPanel hosting) using **Drizzle ORM**, and includes robust authentication features like email verification, password reset, and Role-Based Access Control (RBAC) specifically tailored for restricted staff access.
+This project is configured to connect to an **SQLite** database using **Drizzle ORM**, and includes robust authentication features like email verification, password reset, and Role-Based Access Control (RBAC) specifically tailored for restricted staff access.
 
 ## ✨ Features
 
@@ -17,7 +17,7 @@ This project is configured to connect to a **MySQL** database (ideal for cPanel 
 - **Framework**: [SvelteKit](https://kit.svelte.dev/) with Node adapter.
 - **Authentication**: `better-auth` and `@better-auth/cli` for secure, modern authentication.
 - **Database ORM**: `drizzle-orm` and `drizzle-kit` for schema management and type-safe database access.
-- **Database Driver**: `mysql2` designed to interact with your MySQL database server.
+- **Database Driver**: `better-sqlite3` designed to interact with your SQLite database.
 - **Styling**: Tailwind CSS v4 (`tailwindcss`, `@tailwindcss/vite`, `@tailwindcss/forms`).
 - **Tooling**: Vite, TypeScript, ESLint, Prettier, `pnpm`.
 - **Mailing**: `nodemailer` for authentication emails.
@@ -57,16 +57,16 @@ This project is configured to connect to a **MySQL** database (ideal for cPanel 
 ### 1. Prerequisites
 
 - Node.js installed (v20+ recommended).
-- Access to a MySQL database (e.g., via a cPanel hosting account).
+- No external database required (uses local SQLite).
 - `pnpm` installed globally.
 
 ### 2. Environment Variables
 
-Create a `.env` file in the root of your project based on `.env.example`. Make sure to configure your MySQL connection and Better-Auth secrets:
+Create a `.env` file in the root of your project based on `.env.example`. Make sure to configure your database connection and Better-Auth secrets:
 
 ```env
-# Database connection string (replace with your MySQL credentials)
-DATABASE_URL="mysql://cpanel_user:password@cpanel_host_or_ip:3306/database_name"
+# Database connection string
+DATABASE_URL="file:./sqlite.db"
 
 # Better Auth required variables
 BETTER_AUTH_SECRET="your-strong-random-secret"
@@ -90,7 +90,7 @@ pnpm install
 Once your `.env` is configured with your database credentials, run the Drizzle migrations to generate the auth schema in your remote database:
 
 ```bash
-# Push schema to MySQL database
+# Push schema to SQLite database
 pnpm db:push
 
 # Generate new migrations if you update the schema

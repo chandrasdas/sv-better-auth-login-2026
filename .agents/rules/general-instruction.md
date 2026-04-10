@@ -12,7 +12,7 @@ You are working on **Darpan**, a modern, high-performance web application for sc
 - **Styling**: Tailwind CSS v4
 - **Authentication**: Better-Auth (`better-auth`)
 - **Database ORM**: Drizzle ORM (`drizzle-orm`, `drizzle-kit`)
-- **Database**: MySQL (hosted on cPanel, accessed via `mysql2`)
+- **Database**: SQLite (better-sqlite3)
 - **Package Manager**: `pnpm`
 
 Always use pnpm instead of npm for all package management and script running commands. Do not use npm.
