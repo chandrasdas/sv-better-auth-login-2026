@@ -1,7 +1,7 @@
 {
-  "version": "5",
-  "dialect": "mysql",
-  "id": "920da0c4-8e1f-402e-9fcd-1b288ef47a2b",
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "eef74809-92df-49ed-b859-c905f303bdcd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "account": {
@@ -9,8 +9,8 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": false,
+          "type": "text",
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
@@ -30,7 +30,7 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "varchar(36)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -58,14 +58,14 @@
         },
         "access_token_expires_at": {
           "name": "access_token_expires_at",
-          "type": "timestamp(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "refresh_token_expires_at": {
           "name": "refresh_token_expires_at",
-          "type": "timestamp(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -86,30 +86,20 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
+          "autoincrement": false
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "timestamp(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
+          "autoincrement": false
         }
       },
-      "indexes": {
-        "account_userId_idx": {
-          "name": "account_userId_idx",
-          "columns": [
-            "user_id"
-          ],
-          "isUnique": false
-        }
-      },
+      "indexes": {},
       "foreignKeys": {
         "account_user_id_user_id_fk": {
           "name": "account_user_id_user_id_fk",
@@ -125,44 +115,37 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "account_id": {
-          "name": "account_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraint": {}
+      "checkConstraints": {}
     },
     "allowed_staff": {
       "name": "allowed_staff",
       "columns": {
         "id": {
           "name": "id",
-          "type": "int",
-          "primaryKey": false,
+          "type": "integer",
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": true
         },
         "email": {
           "name": "email",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "name": {
           "name": "name",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "role": {
           "name": "role",
-          "type": "enum('admin','teacher','staff')",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
@@ -170,72 +153,64 @@
         },
         "is_allowed": {
           "name": "is_allowed",
-          "type": "boolean",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": true
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "allowed_staff_id": {
-          "name": "allowed_staff_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {
+      "indexes": {
         "allowed_staff_email_unique": {
           "name": "allowed_staff_email_unique",
           "columns": [
             "email"
-          ]
+          ],
+          "isUnique": true
         }
       },
-      "checkConstraint": {}
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
     },
     "session": {
       "name": "session",
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": false,
+          "type": "text",
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
         "expires_at": {
           "name": "expires_at",
-          "type": "timestamp(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "token": {
           "name": "token",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
+          "autoincrement": false
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "timestamp(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
+          "autoincrement": false
         },
         "ip_address": {
           "name": "ip_address",
@@ -253,19 +228,19 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "varchar(36)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         }
       },
       "indexes": {
-        "session_userId_idx": {
-          "name": "session_userId_idx",
+        "session_token_unique": {
+          "name": "session_token_unique",
           "columns": [
-            "user_id"
+            "token"
           ],
-          "isUnique": false
+          "isUnique": true
         }
       },
       "foreignKeys": {
@@ -283,107 +258,93 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "session_id": {
-          "name": "session_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {
-        "session_token_unique": {
-          "name": "session_token_unique",
-          "columns": [
-            "token"
-          ]
-        }
-      },
-      "checkConstraint": {}
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
     },
     "staff": {
       "name": "staff",
       "columns": {
         "emp_id": {
           "name": "emp_id",
-          "type": "varchar(8)",
-          "primaryKey": false,
+          "type": "text",
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
         "name": {
           "name": "name",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "status": {
           "name": "status",
-          "type": "enum('Permanent','Contractual')",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "designation": {
           "name": "designation",
-          "type": "enum('Headmaster','Assistant Teacher','Librarian','Clerk','Group-D')",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "email": {
           "name": "email",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "phone_no": {
           "name": "phone_no",
-          "type": "varchar(15)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "date_of_birth": {
           "name": "date_of_birth",
-          "type": "date",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "date_of_joining": {
           "name": "date_of_joining",
-          "type": "date",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "qualification": {
           "name": "qualification",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "primary_subject": {
           "name": "primary_subject",
-          "type": "varchar(100)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "user_id": {
           "name": "user_id",
-          "type": "varchar(36)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "is_active": {
           "name": "is_active",
-          "type": "boolean",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
@@ -391,28 +352,26 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
+          "autoincrement": false
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "timestamp(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
+          "autoincrement": false
         }
       },
       "indexes": {
-        "staff_userId_idx": {
-          "name": "staff_userId_idx",
+        "staff_email_unique": {
+          "name": "staff_email_unique",
           "columns": [
-            "user_id"
+            "email"
           ],
-          "isUnique": false
+          "isUnique": true
         }
       },
       "foreignKeys": {
@@ -430,31 +389,17 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "staff_emp_id": {
-          "name": "staff_emp_id",
-          "columns": [
-            "emp_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {
-        "staff_email_unique": {
-          "name": "staff_email_unique",
-          "columns": [
-            "email"
-          ]
-        }
-      },
-      "checkConstraint": {}
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
     },
     "task": {
       "name": "task",
       "columns": {
         "id": {
           "name": "id",
-          "type": "int",
-          "primaryKey": false,
+          "type": "integer",
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": true
         },
@@ -467,7 +412,7 @@
         },
         "priority": {
           "name": "priority",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
@@ -476,44 +421,37 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "task_id": {
-          "name": "task_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraint": {}
+      "checkConstraints": {}
     },
     "user": {
       "name": "user",
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": false,
+          "type": "text",
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
         "name": {
           "name": "name",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "email": {
           "name": "email",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "email_verified": {
           "name": "email_verified",
-          "type": "boolean",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
@@ -528,7 +466,7 @@
         },
         "role": {
           "name": "role",
-          "type": "enum('admin','teacher','staff')",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
@@ -536,7 +474,7 @@
         },
         "failed_otp_attempts": {
           "name": "failed_otp_attempts",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
@@ -544,61 +482,53 @@
         },
         "locked_until": {
           "name": "locked_until",
-          "type": "timestamp(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
+          "autoincrement": false
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "timestamp(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
+          "autoincrement": false
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "user_id": {
-          "name": "user_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {
+      "indexes": {
         "user_email_unique": {
           "name": "user_email_unique",
           "columns": [
             "email"
-          ]
+          ],
+          "isUnique": true
         }
       },
-      "checkConstraint": {}
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
     },
     "verification": {
       "name": "verification",
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": false,
+          "type": "text",
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
         "identifier": {
           "name": "identifier",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -612,58 +542,41 @@
         },
         "expires_at": {
           "name": "expires_at",
-          "type": "timestamp(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
+          "autoincrement": false
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "timestamp(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
+          "autoincrement": false
         }
       },
-      "indexes": {
-        "verification_identifier_idx": {
-          "name": "verification_identifier_idx",
-          "columns": [
-            "identifier"
-          ],
-          "isUnique": false
-        }
-      },
+      "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "verification_id": {
-          "name": "verification_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraint": {}
+      "checkConstraints": {}
     }
   },
   "views": {},
+  "enums": {},
   "_meta": {
     "schemas": {},
     "tables": {},
     "columns": {}
   },
   "internal": {
-    "tables": {},
     "indexes": {}
   }
 }

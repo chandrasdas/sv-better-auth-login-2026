@@ -117,7 +117,7 @@ export const actions: Actions = {
 		try {
 			await db.delete(allowedStaff).where(eq(allowedStaff.id, id));
 			return { success: true, message: 'Staff member deleted successfully.' };
-		} catch (error) {
+		} catch {
 			return fail(500, { message: 'Failed to delete staff member.' });
 		}
 	}

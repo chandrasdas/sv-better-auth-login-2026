@@ -1,121 +1,102 @@
 import { relations } from "drizzle-orm";
 import {
-  mysqlTable,
-  varchar,
+  sqliteTable,
   text,
-  timestamp,
-  boolean,
-  index,
-  mysqlEnum,
-  date,
-  int,
-  unique,
-} from "drizzle-orm/mysql-core";
+  integer,
+} from "drizzle-orm/sqlite-core";
 
 // --- AUTH TABLES ---
 
-export const user = mysqlTable("user", {
-  id: varchar("id", { length: 36 }).primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
-  email: varchar("email", { length: 255 }).notNull(),
-  emailVerified: boolean("email_verified").default(false).notNull(),
+export const user = sqliteTable("user", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  emailVerified: integer("email_verified", { mode: "boolean" }).default(false).notNull(),
   image: text("image"),
-  role: mysqlEnum("role", ["admin", "teacher", "staff"]).default("teacher").notNull(),
-  failedOtpAttempts: int("failed_otp_attempts").default(0).notNull(),
-  lockedUntil: timestamp("locked_until", { fsp: 3, mode: 'date' }),
-  createdAt: timestamp("created_at", { fsp: 3 }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { fsp: 3 }).defaultNow().notNull(),
-}, (table) => [
-  unique("user_email_unique").on(table.email),
-]);
+  role: text("role", { enum: ["admin", "teacher", "staff"] }).default("teacher").notNull(),
+  failedOtpAttempts: integer("failed_otp_attempts").default(0).notNull(),
+  lockedUntil: integer("locked_until", { mode: "timestamp" }),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+});
 
-export const session = mysqlTable("session", {
-  id: varchar("id", { length: 36 }).primaryKey(),
-  expiresAt: timestamp("expires_at", { fsp: 3, mode: 'date' }).notNull(),
-  token: varchar("token", { length: 255 }).notNull(),
-  createdAt: timestamp("created_at", { fsp: 3 }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { fsp: 3 }).defaultNow().notNull(),
+export const session = sqliteTable("session", {
+  id: text("id").primaryKey(),
+  expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
+  token: text("token").notNull().unique(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
-  userId: varchar("user_id", { length: 36 })
+  userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-}, (table) => [
-  index("session_userId_idx").on(table.userId),
-  unique("session_token_unique").on(table.token),
-]);
+});
 
-export const account = mysqlTable("account", {
-  id: varchar("id", { length: 36 }).primaryKey(),
+export const account = sqliteTable("account", {
+  id: text("id").primaryKey(),
   accountId: text("account_id").notNull(),
   providerId: text("provider_id").notNull(),
-  userId: varchar("user_id", { length: 36 })
+  userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
   idToken: text("id_token"),
-  accessTokenExpiresAt: timestamp("access_token_expires_at", { fsp: 3, mode: 'date' }),
-  refreshTokenExpiresAt: timestamp("refresh_token_expires_at", { fsp: 3, mode: 'date' }),
+  accessTokenExpiresAt: integer("access_token_expires_at", { mode: "timestamp" }),
+  refreshTokenExpiresAt: integer("refresh_token_expires_at", { mode: "timestamp" }),
   scope: text("scope"),
   password: text("password"),
-  createdAt: timestamp("created_at", { fsp: 3 }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { fsp: 3 }).defaultNow().notNull(),
-}, (table) => [
-  index("account_userId_idx").on(table.userId),
-]);
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+});
 
-export const verification = mysqlTable("verification", {
-  id: varchar("id", { length: 36 }).primaryKey(),
-  identifier: varchar("identifier", { length: 255 }).notNull(),
+export const verification = sqliteTable("verification", {
+  id: text("id").primaryKey(),
+  identifier: text("identifier").notNull(),
   value: text("value").notNull(),
-  expiresAt: timestamp("expires_at", { fsp: 3, mode: 'date' }).notNull(),
-  createdAt: timestamp("created_at", { fsp: 3 }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { fsp: 3 }).defaultNow().notNull(),
-}, (table) => [
-  index("verification_identifier_idx").on(table.identifier),
-]);
+  expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+});
 
 // --- APPLICATION TABLES ---
 
-export const allowedStaff = mysqlTable("allowed_staff", {
-  id: int("id").autoincrement().primaryKey(),
-  email: varchar("email", { length: 255 }).unique().notNull(),
-  name: varchar("name", { length: 255 }),
-  role: mysqlEnum("role", ["admin", "teacher", "staff"]).default("teacher").notNull(),
-  isAllowed: boolean("is_allowed").default(true).notNull(),
+export const allowedStaff = sqliteTable("allowed_staff", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  email: text("email").unique().notNull(),
+  name: text("name"),
+  role: text("role", { enum: ["admin", "teacher", "staff"] }).default("teacher").notNull(),
+  isAllowed: integer("is_allowed", { mode: "boolean" }).default(true).notNull(),
 });
 
-export const staff = mysqlTable("staff", {
-  empId: varchar("emp_id", { length: 8 }).primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
-  status: mysqlEnum("status", ["Permanent", "Contractual"]).notNull(),
-  designation: mysqlEnum("designation", [
+export const staff = sqliteTable("staff", {
+  empId: text("emp_id").primaryKey(),
+  name: text("name").notNull(),
+  status: text("status", { enum: ["Permanent", "Contractual"] }).notNull(),
+  designation: text("designation", { enum: [
     "Headmaster",
     "Assistant Teacher",
     "Librarian",
     "Clerk",
     "Group-D",
-  ]).notNull(),
-  email: varchar("email", { length: 255 }),
-  phoneNo: varchar("phone_no", { length: 15 }),
-  dateOfBirth: date("date_of_birth", { mode: "date" }),
-  dateOfJoining: date("date_of_joining", { mode: "date" }),
-  qualification: varchar("qualification", { length: 255 }),
-  primarySubject: varchar("primary_subject", { length: 100 }),
-  userId: varchar("user_id", { length: 36 }).references(() => user.id, { onDelete: "set null" }),
-  isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at", { fsp: 3 }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { fsp: 3 }).defaultNow().notNull(),
-}, (table) => [
-  unique("staff_email_unique").on(table.email),
-  index("staff_userId_idx").on(table.userId),
-]);
+  ] }).notNull(),
+  email: text("email").unique(),
+  phoneNo: text("phone_no"),
+  dateOfBirth: integer("date_of_birth", { mode: "timestamp" }),
+  dateOfJoining: integer("date_of_joining", { mode: "timestamp" }),
+  qualification: text("qualification"),
+  primarySubject: text("primary_subject"),
+  userId: text("user_id").references(() => user.id, { onDelete: "set null" }),
+  isActive: integer("is_active", { mode: "boolean" }).default(true).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+});
 
-export const task = mysqlTable("task", {
-  id: int("id").autoincrement().primaryKey(),
+export const task = sqliteTable("task", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   title: text("title").notNull(),
-  priority: int("priority").default(1).notNull(),
+  priority: integer("priority").default(1).notNull(),
 });
 
 // --- RELATIONS ---

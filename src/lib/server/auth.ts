@@ -11,7 +11,7 @@ export const auth = betterAuth({
 	baseURL: env.BETTER_AUTH_URL,
 	trustedOrigins: ['http://localhost:5173'],
 	secret: env.BETTER_AUTH_SECRET,
-	database: drizzleAdapter(db, { provider: 'mysql', schema }),
+	database: drizzleAdapter(db, { provider: 'sqlite', schema }),
 	emailAndPassword: { enabled: true },
 	user: {
 		additionalFields: {
