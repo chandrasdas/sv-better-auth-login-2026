@@ -93,11 +93,7 @@ export const staff = sqliteTable("staff", {
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
 });
 
-export const task = sqliteTable("task", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  title: text("title").notNull(),
-  priority: integer("priority").default(1).notNull(),
-});
+
 
 // --- RELATIONS ---
 

@@ -126,10 +126,10 @@
 
 						<!-- Email (Pre-filled from auth) -->
 						<div class="sm:col-span-2">
-							<label for="email" class="block text-sm font-medium text-slate-300">Email Address (Editable)</label>
-							<input type="email" name="email" id="email" maxlength="255"
+							<label for="email" class="block text-sm font-medium text-slate-300">Email Address</label>
+							<input type="email" name="email" id="email" maxlength="255" readonly
 								value={form?.data?.email || data.existingStaff?.email || data.user?.email || ''}
-								class="mt-2 block w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 transition focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+								class="mt-2 block w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white opacity-70 cursor-not-allowed placeholder-slate-500 transition focus:outline-none"
 								placeholder="john@example.com" />
 							<p class="mt-1 text-xs text-slate-500">This will be used for official communications.</p>
 						</div>
