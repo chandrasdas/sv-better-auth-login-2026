@@ -103,7 +103,7 @@ export const actions: Actions = {
 		} catch (error: unknown) {
 			const err = error as { code?: string };
 			console.error('Error inserting staff data:', err);
-			if (err.code === 'ER_DUP_ENTRY') {
+			if (err.code === 'SQLITE_CONSTRAINT_UNIQUE') {
 				return fail(400, {
 					error: 'A staff member with this Employee ID or Email already exists.',
 					data: Object.fromEntries(formData)

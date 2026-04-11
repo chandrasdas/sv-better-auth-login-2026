@@ -5,6 +5,10 @@ import {
   integer,
 } from "drizzle-orm/sqlite-core";
 
+// --- SHARED CONSTANTS ---
+
+export const ROLES = ["admin", "teacher", "staff"] as const;
+
 // --- AUTH TABLES ---
 
 export const user = sqliteTable("user", {
@@ -13,11 +17,11 @@ export const user = sqliteTable("user", {
   email: text("email").notNull().unique(),
   emailVerified: integer("email_verified", { mode: "boolean" }).default(false).notNull(),
   image: text("image"),
-  role: text("role", { enum: ["admin", "teacher", "staff"] }).default("teacher").notNull(),
+  role: text("role", { enum: ROLES }).default("teacher").notNull(),
   failedOtpAttempts: integer("failed_otp_attempts").default(0).notNull(),
   lockedUntil: integer("locked_until", { mode: "timestamp" }),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()).$onUpdateFn(() => new Date()),
 });
 
 export const session = sqliteTable("session", {
@@ -25,7 +29,7 @@ export const session = sqliteTable("session", {
   expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
   token: text("token").notNull().unique(),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()).$onUpdateFn(() => new Date()),
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
   userId: text("user_id")
@@ -48,7 +52,7 @@ export const account = sqliteTable("account", {
   scope: text("scope"),
   password: text("password"),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()).$onUpdateFn(() => new Date()),
 });
 
 export const verification = sqliteTable("verification", {
@@ -57,7 +61,7 @@ export const verification = sqliteTable("verification", {
   value: text("value").notNull(),
   expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()).$onUpdateFn(() => new Date()),
 });
 
 // --- APPLICATION TABLES ---
@@ -66,12 +70,13 @@ export const allowedStaff = sqliteTable("allowed_staff", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   email: text("email").unique().notNull(),
   name: text("name"),
-  role: text("role", { enum: ["admin", "teacher", "staff"] }).default("teacher").notNull(),
+  role: text("role", { enum: ROLES }).default("teacher").notNull(),
   isAllowed: integer("is_allowed", { mode: "boolean" }).default(true).notNull(),
 });
 
 export const staff = sqliteTable("staff", {
-  empId: text("emp_id").primaryKey(),
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  empId: text("emp_id").unique().notNull(), // Business ID
   name: text("name").notNull(),
   status: text("status", { enum: ["Permanent", "Contractual"] }).notNull(),
   designation: text("designation", { enum: [
@@ -90,7 +95,7 @@ export const staff = sqliteTable("staff", {
   userId: text("user_id").references(() => user.id, { onDelete: "set null" }),
   isActive: integer("is_active", { mode: "boolean" }).default(true).notNull(),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()).$onUpdateFn(() => new Date()),
 });
 
 
