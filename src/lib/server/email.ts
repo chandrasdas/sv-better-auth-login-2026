@@ -2,8 +2,8 @@ import nodemailer from 'nodemailer';
 import { env } from '$env/dynamic/private';
 
 const transporter = nodemailer.createTransport({
-	host: env.SMTP_HOST,
-	port: Number(env.SMTP_PORT) || 465,
+	host: "mail.rkmvvmmalda.org",
+	port: 465,
 	secure: true,
 	auth: {
 		user: env.SMTP_USER,
