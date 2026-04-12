@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { auth } from '$lib/server/auth';
+import { APIError } from 'better-auth/api';
 
 export async function POST({ request }) {
     try {
@@ -21,11 +22,18 @@ export async function POST({ request }) {
         } else {
             return json({ error: "Failed to reset password, the reset window may have expired." }, { status: 400 });
         }
-    } catch (err: any) {
+    } catch (err: unknown) {
         console.error('Password reset Server API error:', err);
-        // Better Auth throws APIError for validation errors (e.g. short password)
-        const errorMessage = err.body?.message || err.message || 'Failed to update password. Please try again.';
-        const status = typeof err.status === 'number' ? err.status : 400;
+        
+        let errorMessage = 'Failed to update password. Please try again.';
+        const status = 400;
+
+        if (err instanceof APIError) {
+            errorMessage = err.message || errorMessage;
+        } else if (err instanceof Error) {
+            errorMessage = err.message;
+        }
+
         return json({ error: errorMessage }, { status });
     }
 }

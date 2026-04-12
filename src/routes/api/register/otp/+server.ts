@@ -3,6 +3,7 @@ import { db } from '$lib/server/db';
 import { verification } from '$lib/server/db/auth.schema';
 import { sendEmail } from '$lib/server/email';
 import { eq } from 'drizzle-orm';
+import crypto from 'crypto';
 
 export async function POST({ request }) {
     try {
@@ -94,8 +95,8 @@ export async function POST({ request }) {
         }
 
         return json({ error: 'Invalid action' }, { status: 400 });
-    } catch (err: any) {
+    } catch (err: unknown) {
         console.error('OTP error:', err);
-        return json({ error: err.message || 'Internal server error' }, { status: 500 });
+        return json({ error: err instanceof Error ? err.message : 'Internal server error' }, { status: 500 });
     }
 }
