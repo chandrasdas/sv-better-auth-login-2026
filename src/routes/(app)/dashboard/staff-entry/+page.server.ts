@@ -1,16 +1,15 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
-import { staff } from '$lib/server/db/auth.schema';
+import { staff } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
+import { requireAuth } from '$lib/server/auth-utils';
+import { staffEntrySchema } from '$lib/validations/staff';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
-	const user = locals.user;
-	if (!user) {
-		throw redirect(302, '/login');
-	}
+	const user = requireAuth(locals);
 	
-	// Pre-fetch if the user has already filled the form?
+	// Pre-fetch if the user has already filled the form
 	const existingStaff = await db.query.staff.findFirst({
 		where: eq(staff.userId, user.id)
 	});
@@ -33,42 +32,35 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
-		const user = locals.user;
-		if (!user) {
-			throw redirect(302, '/login');
-		}
+		const user = requireAuth(locals);
 
 		const formData = await request.formData();
-		const empId = formData.get('empId')?.toString();
-		const name = formData.get('name')?.toString();
-		const status = formData.get('status')?.toString() as 'Permanent' | 'Contractual';
-		const designation = formData.get('designation')?.toString() as 'Headmaster' | 'Assistant Teacher' | 'Librarian' | 'Clerk' | 'Group-D';
-		const email = formData.get('email')?.toString();
-		const phoneNo = formData.get('phoneNo')?.toString();
-		const dateOfBirthStr = formData.get('dateOfBirth')?.toString();
-		const dateOfJoiningStr = formData.get('dateOfJoining')?.toString();
-		const qualification = formData.get('qualification')?.toString();
-		const primarySubject = formData.get('primarySubject')?.toString();
+		const raw = Object.fromEntries(formData);
 
-		if (!empId || !name || !status || !designation) {
+		const result = staffEntrySchema.safeParse(raw);
+		if (!result.success) {
+			const fieldErrors = result.error.flatten().fieldErrors;
+			const firstError = Object.values(fieldErrors).flat()[0] || 'Invalid input.';
 			return fail(400, {
-				error: 'Employee ID, Name, Status, and Designation are required.',
-				data: Object.fromEntries(formData)
+				error: firstError,
+				data: raw
 			});
 		}
 
+		const validated = result.data;
+
 		try {
 			const staffData = {
-				empId,
-				name,
-				status,
-				designation,
-				email: email || null,
-				phoneNo: phoneNo || null,
-				dateOfBirth: dateOfBirthStr ? new Date(dateOfBirthStr) : null,
-				dateOfJoining: dateOfJoiningStr ? new Date(dateOfJoiningStr) : null,
-				qualification: qualification || null,
-				primarySubject: primarySubject || null,
+				empId: validated.empId,
+				name: validated.name,
+				status: validated.status,
+				designation: validated.designation,
+				email: validated.email || null,
+				phoneNo: validated.phoneNo || null,
+				dateOfBirth: validated.dateOfBirth ? new Date(validated.dateOfBirth) : null,
+				dateOfJoining: validated.dateOfJoining ? new Date(validated.dateOfJoining) : null,
+				qualification: validated.qualification || null,
+				primarySubject: validated.primarySubject || null,
 				userId: user.id
 			};
 
@@ -101,17 +93,16 @@ export const actions: Actions = {
 
 			return { success: true, noChanges: false };
 		} catch (error: unknown) {
-			const err = error as { code?: string };
-			console.error('Error inserting staff data:', err);
-			if (err.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+			console.error('Error inserting staff data:', error);
+			if (error instanceof Error && error.message.includes('UNIQUE constraint failed')) {
 				return fail(400, {
 					error: 'A staff member with this Employee ID or Email already exists.',
-					data: Object.fromEntries(formData)
+					data: raw
 				});
 			}
 			return fail(500, {
 				error: 'An unexpected error occurred while saving the data.',
-				data: Object.fromEntries(formData)
+				data: raw
 			});
 		}
 	}

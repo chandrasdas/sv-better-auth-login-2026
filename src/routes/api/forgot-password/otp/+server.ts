@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
-import { user, verification } from '$lib/server/db/auth.schema';
+import { user, verification } from '$lib/server/db/schema';
 import { sendEmail } from '$lib/server/email';
 import { eq } from 'drizzle-orm';
 import crypto from 'crypto';

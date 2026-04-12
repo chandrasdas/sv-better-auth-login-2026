@@ -24,25 +24,16 @@
 	<title>Allowed Staff Management | {APP_NAME}</title>
 </svelte:head>
 
-<div class="min-h-screen bg-slate-950 text-slate-100 font-sans">
-	<nav class="sticky top-0 z-50 border-b border-white/5 bg-slate-950/50 backdrop-blur-xl">
-		<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-			<div class="flex h-16 items-center justify-between">
-				<div class="flex items-center gap-4">
-					<a href={resolve('/dashboard')} class="text-sm font-medium text-slate-300 hover:text-white transition flex items-center gap-1">
-						<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-						Back to Dashboard
-					</a>
-				</div>
-                <div class="text-sm font-medium text-slate-300">Admin Mode</div>
-			</div>
-		</div>
-	</nav>
-
+<div class="min-h-screen text-slate-100 font-sans">
 	<main class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8" in:fade={{ duration: 400 }}>
-		<div class="mb-8">
-			<h1 class="text-3xl font-bold tracking-tight text-white mb-2">Allowed Staff Management</h1>
-			<p class="text-slate-400">Manage the list of staff members permanently allowed to register for an account.</p>
+		<div class="mb-8 flex items-center gap-4">
+			<a href={resolve('/dashboard')} aria-label="Back to Dashboard" class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 text-slate-400 transition hover:bg-white/10 hover:text-white">
+				<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+			</a>
+			<div>
+				<h1 class="text-3xl font-bold tracking-tight text-white mb-2">Allowed Staff Management</h1>
+				<p class="text-slate-400">Manage the list of staff members permanently allowed to register for an account.</p>
+			</div>
 		</div>
 
 		{#if form?.message}
