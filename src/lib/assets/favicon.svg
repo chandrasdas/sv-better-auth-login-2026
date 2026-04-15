@@ -1,7 +1,31 @@
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
-<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#000000">
-<g id="SVGRepo_bgCarrier" stroke-width="0"/>
-<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
-<g id="SVGRepo_iconCarrier"> <path style="fill:#6081e1;" d="M256,512C132.402,512,33.391,398.011,33.391,256S132.402,0,256,0s222.609,113.989,222.609,256 S379.598,512,256,512z"/> <path style="fill:#2d4fb4;" d="M478.609,256C478.609,113.989,379.598,0,256,0v512C379.598,512,478.609,398.011,478.609,256z"/> <path style="fill:#D1E5F0;" d="M256,445.217c-86.772,0-155.826-84.033-155.826-189.217S169.228,66.783,256,66.783 S411.826,150.815,411.826,256S342.772,445.217,256,445.217z"/> <path style="fill:#C5DEE7;" d="M411.826,256c0-105.185-69.054-189.217-155.826-189.217v378.435 C342.772,445.217,411.826,361.185,411.826,256z"/> <g> <path style="fill:#FFFFFF;" d="M185.185,294.968c-4.668,0-9.337-1.783-12.897-5.343c-7.125-7.125-7.125-18.668,0-25.794 l109.24-109.24c7.119-7.119,18.674-7.119,25.794,0c7.125,7.125,7.125,18.668,0,25.794l-109.24,109.24 C194.522,293.185,189.853,294.968,185.185,294.968z"/> <path style="fill:#FFFFFF;" d="M217.652,362.827c-4.668,0-9.337-1.783-12.897-5.343c-7.125-7.125-7.125-18.668,0-25.794 l109.185-109.185c7.119-7.119,18.674-7.119,25.794,0c7.125,7.125,7.125,18.668,0,25.794L230.549,357.484 C226.99,361.043,222.32,362.827,217.652,362.827z"/> </g> </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <!-- Primary indigo-to-violet gradient matching the app theme -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <!-- Subtle inner shadow / glow -->
+    <radialGradient id="glow" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#818cf8" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect width="512" height="512" rx="108" ry="108" fill="url(#bgGrad)"/>
+
+  <!-- Subtle glow overlay -->
+  <rect width="512" height="512" rx="108" ry="108" fill="url(#glow)"/>
+
+  <!-- Stylized "D" lettermark -->
+  <g transform="translate(228, 256) scale(1.2)">
+    <!-- Main "D" shape - bold, modern, rounded -->
+    <path
+      d="M-68,-120 L-68,120 L20,120 C95,120 148,68 148,0 C148,-68 95,-120 20,-120 Z
+         M-24,-76 L20,-76 C68,-76 100,-44 100,0 C100,44 68,76 20,76 L-24,76 Z"
+      fill="white"
+      opacity="0.95"
+    />
+  </g>
+</svg>
