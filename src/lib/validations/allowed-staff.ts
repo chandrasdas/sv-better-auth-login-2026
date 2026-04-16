@@ -1,23 +1,25 @@
-import { z } from 'zod';
+import * as v from 'valibot';
 
-export const addAllowedStaffSchema = z.object({
-	name: z.string().optional().default(''),
-	email: z.string().min(1, { error: 'Email is required' }),
-	role: z.enum(['admin', 'teacher', 'staff']).default('teacher'),
-	isAllowed: z.boolean().default(true)
+const rolesEnum = ['admin', 'teacher', 'staff'] as const;
+
+export const addAllowedStaffSchema = v.object({
+	name: v.optional(v.string(), ''),
+	email: v.pipe(v.string(), v.minLength(1, 'Email is required')),
+	role: v.fallback(v.picklist(rolesEnum), 'teacher'),
+	isAllowed: v.optional(v.boolean(), true)
 });
 
-export const editAllowedStaffSchema = z.object({
-	id: z.coerce.number({ error: 'Invalid ID' }),
-	name: z.string().optional().default(''),
-	email: z.string().min(1, { error: 'Email is required' }),
-	role: z.enum(['admin', 'teacher', 'staff']).default('teacher'),
-	isAllowed: z.boolean().default(false)
+export const editAllowedStaffSchema = v.object({
+	id: v.pipe(v.unknown(), v.transform(Number), v.number('Invalid ID')),
+	name: v.optional(v.string(), ''),
+	email: v.pipe(v.string(), v.minLength(1, 'Email is required')),
+	role: v.fallback(v.picklist(rolesEnum), 'teacher'),
+	isAllowed: v.optional(v.boolean(), false)
 });
 
-export const deleteAllowedStaffSchema = z.object({
-	id: z.coerce.number({ error: 'Invalid ID' })
+export const deleteAllowedStaffSchema = v.object({
+	id: v.pipe(v.unknown(), v.transform(Number), v.number('Invalid ID'))
 });
 
-export type AddAllowedStaffInput = z.infer<typeof addAllowedStaffSchema>;
-export type EditAllowedStaffInput = z.infer<typeof editAllowedStaffSchema>;
+export type AddAllowedStaffInput = v.InferOutput<typeof addAllowedStaffSchema>;
+export type EditAllowedStaffInput = v.InferOutput<typeof editAllowedStaffSchema>;

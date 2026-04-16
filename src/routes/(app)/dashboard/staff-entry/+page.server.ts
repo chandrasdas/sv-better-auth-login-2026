@@ -1,8 +1,10 @@
 import { fail } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
+import { isUniqueConstraintError } from '$lib/server/db/utils';
 import { staff } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { requireAuth } from '$lib/server/auth-utils';
+import * as v from 'valibot';
 import { staffEntrySchema } from '$lib/validations/staff';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -37,17 +39,17 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const raw = Object.fromEntries(formData);
 
-		const result = staffEntrySchema.safeParse(raw);
+		const result = v.safeParse(staffEntrySchema, raw);
 		if (!result.success) {
-			const fieldErrors = result.error.flatten().fieldErrors;
-			const firstError = Object.values(fieldErrors).flat()[0] || 'Invalid input.';
+			const flatErrors = v.flatten(result.issues);
+			const firstError = Object.values(flatErrors.nested ?? {}).flat()[0] || 'Invalid input.';
 			return fail(400, {
 				error: firstError,
 				data: raw
 			});
 		}
 
-		const validated = result.data;
+		const validated = result.output;
 
 		try {
 			const staffData = {
@@ -94,7 +96,7 @@ export const actions: Actions = {
 			return { success: true, noChanges: false };
 		} catch (error: unknown) {
 			console.error('Error inserting staff data:', error);
-			if (error instanceof Error && error.message.includes('UNIQUE constraint failed')) {
+			if (isUniqueConstraintError(error)) {
 				return fail(400, {
 					error: 'A staff member with this Employee ID or Email already exists.',
 					data: raw
