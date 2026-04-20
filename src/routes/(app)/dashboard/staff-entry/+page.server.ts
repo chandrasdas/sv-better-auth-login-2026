@@ -1,6 +1,5 @@
 import { fail } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
-import { isUniqueConstraintError } from '$lib/server/db/utils';
 import { staff } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { requireAuth } from '$lib/server/auth-utils';
@@ -41,8 +40,8 @@ export const actions: Actions = {
 
 		const result = v.safeParse(staffEntrySchema, raw);
 		if (!result.success) {
-			const flatErrors = v.flatten(result.issues);
-			const firstError = Object.values(flatErrors.nested ?? {}).flat()[0] || 'Invalid input.';
+			const fieldErrors = v.flatten(result.issues).nested ?? {};
+			const firstError = Object.values(fieldErrors).flat()[0] || 'Invalid input.';
 			return fail(400, {
 				error: firstError,
 				data: raw
@@ -71,6 +70,19 @@ export const actions: Actions = {
 			});
 
 			if (existingStaff) {
+				// If the user is changing their empId, check the new one isn't taken by someone else
+				if (existingStaff.empId !== staffData.empId) {
+					const empIdTaken = await db.query.staff.findFirst({
+						where: eq(staff.empId, staffData.empId)
+					});
+					if (empIdTaken) {
+						return fail(400, {
+							error: `Employee ID "${staffData.empId}" is already in use by another staff member.`,
+							data: raw
+						});
+					}
+				}
+
 				const normalizeDate = (d: Date | null) => d ? d.toISOString().split('T')[0] : null;
 				const hasChanges = 
 					existingStaff.empId !== staffData.empId ||
@@ -90,13 +102,28 @@ export const actions: Actions = {
 					return { success: true, noChanges: true };
 				}
 			} else {
+				// Check if empId is already taken before inserting
+				const empIdTaken = await db.query.staff.findFirst({
+					where: eq(staff.empId, staffData.empId)
+				});
+				if (empIdTaken) {
+					return fail(400, {
+						error: `Employee ID "${staffData.empId}" is already in use by another staff member.`,
+						data: raw
+					});
+				}
+
 				await db.insert(staff).values(staffData);
 			}
 
 			return { success: true, noChanges: false };
 		} catch (error: unknown) {
-			console.error('Error inserting staff data:', error);
-			if (isUniqueConstraintError(error)) {
+			console.error('Error saving staff data:', error);
+			// DrizzleQueryError wraps the SQLite error in `cause`
+			const errorMessage = error instanceof Error
+				? error.message + (error.cause instanceof Error ? ' ' + error.cause.message : '')
+				: '';
+			if (errorMessage.includes('UNIQUE constraint failed')) {
 				return fail(400, {
 					error: 'A staff member with this Employee ID or Email already exists.',
 					data: raw

@@ -7,6 +7,7 @@ import { eq } from 'drizzle-orm';
 import { requireRole } from '$lib/server/auth-utils';
 import * as v from 'valibot';
 import { addAllowedStaffSchema, editAllowedStaffSchema, deleteAllowedStaffSchema } from '$lib/validations/allowed-staff';
+import * as v from 'valibot';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const user = requireRole(locals, 'admin');
@@ -33,8 +34,8 @@ export const actions: Actions = {
 
 		const result = v.safeParse(addAllowedStaffSchema, raw);
 		if (!result.success) {
-			const flatErrors = v.flatten(result.issues);
-			const firstError = Object.values(flatErrors.nested ?? {}).flat()[0] || 'Invalid input.';
+			const fieldErrors = v.flatten(result.issues).nested ?? {};
+			const firstError = Object.values(fieldErrors).flat()[0] || 'Invalid input.';
 			return fail(400, { message: firstError });
 		}
 
@@ -70,8 +71,8 @@ export const actions: Actions = {
 
 		const result = v.safeParse(editAllowedStaffSchema, raw);
 		if (!result.success) {
-			const flatErrors = v.flatten(result.issues);
-			const firstError = Object.values(flatErrors.nested ?? {}).flat()[0] || 'Invalid input.';
+			const fieldErrors = v.flatten(result.issues).nested ?? {};
+			const firstError = Object.values(fieldErrors).flat()[0] || 'Invalid input.';
 			return fail(400, { message: firstError });
 		}
 
@@ -108,7 +109,7 @@ export const actions: Actions = {
 		}
 
 		try {
-			await db.delete(allowedStaff).where(eq(allowedStaff.id, result.output!.id));
+			await db.delete(allowedStaff).where(eq(allowedStaff.id, result.output.id));
 			return { success: true, message: 'Staff member deleted successfully.' };
 		} catch {
 			return fail(500, { message: 'Failed to delete staff member.' });
