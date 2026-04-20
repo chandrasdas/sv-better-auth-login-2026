@@ -4,6 +4,7 @@ import { staff } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { requireAuth } from '$lib/server/auth-utils';
 import { staffEntrySchema } from '$lib/validations/staff';
+import * as v from 'valibot';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -37,9 +38,9 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const raw = Object.fromEntries(formData);
 
-		const result = staffEntrySchema.safeParse(raw);
+		const result = v.safeParse(staffEntrySchema, raw);
 		if (!result.success) {
-			const fieldErrors = result.error.flatten().fieldErrors;
+			const fieldErrors = v.flatten(result.issues).nested ?? {};
 			const firstError = Object.values(fieldErrors).flat()[0] || 'Invalid input.';
 			return fail(400, {
 				error: firstError,
@@ -47,7 +48,7 @@ export const actions: Actions = {
 			});
 		}
 
-		const validated = result.data;
+		const validated = result.output;
 
 		try {
 			const staffData = {
@@ -69,6 +70,19 @@ export const actions: Actions = {
 			});
 
 			if (existingStaff) {
+				// If the user is changing their empId, check the new one isn't taken by someone else
+				if (existingStaff.empId !== staffData.empId) {
+					const empIdTaken = await db.query.staff.findFirst({
+						where: eq(staff.empId, staffData.empId)
+					});
+					if (empIdTaken) {
+						return fail(400, {
+							error: `Employee ID "${staffData.empId}" is already in use by another staff member.`,
+							data: raw
+						});
+					}
+				}
+
 				const normalizeDate = (d: Date | null) => d ? d.toISOString().split('T')[0] : null;
 				const hasChanges = 
 					existingStaff.empId !== staffData.empId ||
@@ -88,13 +102,28 @@ export const actions: Actions = {
 					return { success: true, noChanges: true };
 				}
 			} else {
+				// Check if empId is already taken before inserting
+				const empIdTaken = await db.query.staff.findFirst({
+					where: eq(staff.empId, staffData.empId)
+				});
+				if (empIdTaken) {
+					return fail(400, {
+						error: `Employee ID "${staffData.empId}" is already in use by another staff member.`,
+						data: raw
+					});
+				}
+
 				await db.insert(staff).values(staffData);
 			}
 
 			return { success: true, noChanges: false };
 		} catch (error: unknown) {
-			console.error('Error inserting staff data:', error);
-			if (error instanceof Error && error.message.includes('UNIQUE constraint failed')) {
+			console.error('Error saving staff data:', error);
+			// DrizzleQueryError wraps the SQLite error in `cause`
+			const errorMessage = error instanceof Error
+				? error.message + (error.cause instanceof Error ? ' ' + error.cause.message : '')
+				: '';
+			if (errorMessage.includes('UNIQUE constraint failed')) {
 				return fail(400, {
 					error: 'A staff member with this Employee ID or Email already exists.',
 					data: raw

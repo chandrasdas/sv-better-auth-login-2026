@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { authClient } from '$lib/auth-client';
-	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { fade, slide } from 'svelte/transition';
 	import { APP_NAME } from '$lib/config';
@@ -98,7 +97,7 @@
 				error = registerError.message || 'An error occurred during registration.';
 			}
 		} else {
-			await goto(resolve('/dashboard'));
+			window.location.href = '/dashboard';
 		}
 	}
 </script>

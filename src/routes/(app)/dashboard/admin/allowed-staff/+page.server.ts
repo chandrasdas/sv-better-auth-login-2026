@@ -5,6 +5,7 @@ import { allowedStaff } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { requireRole } from '$lib/server/auth-utils';
 import { addAllowedStaffSchema, editAllowedStaffSchema, deleteAllowedStaffSchema } from '$lib/validations/allowed-staff';
+import * as v from 'valibot';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const user = requireRole(locals, 'admin');
@@ -29,14 +30,14 @@ export const actions: Actions = {
 			isAllowed: formData.get('isAllowed') === 'on' || formData.get('isAllowed') === 'true'
 		};
 
-		const result = addAllowedStaffSchema.safeParse(raw);
+		const result = v.safeParse(addAllowedStaffSchema, raw);
 		if (!result.success) {
-			const fieldErrors = result.error.flatten().fieldErrors;
+			const fieldErrors = v.flatten(result.issues).nested ?? {};
 			const firstError = Object.values(fieldErrors).flat()[0] || 'Invalid input.';
 			return fail(400, { message: firstError });
 		}
 
-		const validated = result.data;
+		const validated = result.output;
 
 		try {
 			await db.insert(allowedStaff).values({
@@ -66,14 +67,14 @@ export const actions: Actions = {
 			isAllowed: formData.has('isAllowed')
 		};
 
-		const result = editAllowedStaffSchema.safeParse(raw);
+		const result = v.safeParse(editAllowedStaffSchema, raw);
 		if (!result.success) {
-			const fieldErrors = result.error.flatten().fieldErrors;
+			const fieldErrors = v.flatten(result.issues).nested ?? {};
 			const firstError = Object.values(fieldErrors).flat()[0] || 'Invalid input.';
 			return fail(400, { message: firstError });
 		}
 
-		const validated = result.data;
+		const validated = result.output;
 
 		try {
 			await db.update(allowedStaff)
@@ -100,13 +101,13 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const raw = { id: formData.get('id') as string };
 
-		const result = deleteAllowedStaffSchema.safeParse(raw);
+		const result = v.safeParse(deleteAllowedStaffSchema, raw);
 		if (!result.success) {
 			return fail(400, { message: 'Invalid ID' });
 		}
 
 		try {
-			await db.delete(allowedStaff).where(eq(allowedStaff.id, result.data.id));
+			await db.delete(allowedStaff).where(eq(allowedStaff.id, result.output.id));
 			return { success: true, message: 'Staff member deleted successfully.' };
 		} catch {
 			return fail(500, { message: 'Failed to delete staff member.' });

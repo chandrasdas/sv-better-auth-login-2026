@@ -1,19 +1,19 @@
-import { z } from 'zod';
+import * as v from 'valibot';
 
-export const staffEntrySchema = z.object({
-	empId: z.string().min(1, { error: 'Employee ID is required' }),
-	name: z.string().min(1, { error: 'Name is required' }),
-	status: z.enum(['Permanent', 'Contractual'], { error: 'Status must be Permanent or Contractual' }),
-	designation: z.enum(
+export const staffEntrySchema = v.object({
+	empId: v.pipe(v.string(), v.minLength(1, 'Employee ID is required')),
+	name: v.pipe(v.string(), v.minLength(1, 'Name is required')),
+	status: v.picklist(['Permanent', 'Contractual'], 'Status must be Permanent or Contractual'),
+	designation: v.picklist(
 		['Headmaster', 'Assistant Teacher', 'Librarian', 'Clerk', 'Group-D'],
-		{ error: 'Invalid designation' }
+		'Invalid designation'
 	),
-	email: z.string().optional().default(''),
-	phoneNo: z.string().optional().default(''),
-	dateOfBirth: z.string().optional().default(''),
-	dateOfJoining: z.string().optional().default(''),
-	qualification: z.string().optional().default(''),
-	primarySubject: z.string().optional().default('')
+	email: v.optional(v.string(), ''),
+	phoneNo: v.optional(v.string(), ''),
+	dateOfBirth: v.optional(v.string(), ''),
+	dateOfJoining: v.optional(v.string(), ''),
+	qualification: v.optional(v.string(), ''),
+	primarySubject: v.optional(v.string(), '')
 });
 
-export type StaffEntryInput = z.infer<typeof staffEntrySchema>;
+export type StaffEntryInput = v.InferOutput<typeof staffEntrySchema>;
