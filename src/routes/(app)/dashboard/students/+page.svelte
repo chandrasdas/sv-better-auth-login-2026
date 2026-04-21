@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { getSections } from './students.remote';
 	import { resolve } from '$app/paths';
 	import { fade } from 'svelte/transition';
 	import { SvelteURLSearchParams } from 'svelte/reactivity';
@@ -7,15 +8,56 @@
 	let { data } = $props();
 	let hasFilters = $derived(data.query || data.filters.session || data.filters.class || data.filters.section);
 
-	// Get the display name for the active session filter
+	// Reactive state for dropdowns
+	let currentClass = $state(data.filters.class);
+	let sections = $state(data.sections);
+	let currentSection = $state(data.filters.section);
+
+	$effect(() => {
+		currentClass = data.filters.class;
+		sections = data.sections;
+		currentSection = data.filters.section;
+	});
+
+	// Get the display names for the active filter badges
 	let sessionName = $derived(
 		data.filters.session
 			? data.sessions.find(s => s.id.toString() === data.filters.session)?.name ?? data.filters.session
 			: ''
 	);
 
+	let className = $derived(
+		data.filters.class
+			? data.classes.find(c => c.id.toString() === data.filters.class)?.name ?? data.filters.class
+			: ''
+	);
+
+	let sectionLetter = $derived(
+		data.filters.section
+			? data.sections.find(s => s.id.toString() === data.filters.section)?.letter ?? data.filters.section
+			: ''
+	);
+
+	async function handleClassChange(e: Event) {
+		const target = e.target as HTMLSelectElement;
+		const newClassId = target.value;
+		currentClass = newClassId;
+		
+		if (newClassId) {
+			const fetchedSections = await getSections(parseInt(newClassId));
+			sections = fetchedSections;
+			if (fetchedSections.length > 0) {
+				currentSection = fetchedSections[0].id.toString();
+			} else {
+				currentSection = '';
+			}
+		} else {
+			sections = [];
+			currentSection = '';
+		}
+	}
+
 	// Returns only the query string (e.g. "?page=1&session=2") after removing keyToRemove.
-	// resolve() is called in the template with a literal so TypeScript can validate it.
 	function removeFilterQs(keyToRemove: string): string {
 		const params = new SvelteURLSearchParams();
 		if (keyToRemove !== 'q' && data.query) params.set('q', data.query);
@@ -73,23 +115,29 @@
                 
                 <div class="flex flex-wrap gap-3">
                     <select name="session" value={data.filters.session} class="rounded-xl border border-white/10 bg-white/5 py-2.5 pl-3 pr-8 text-sm text-white focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition">
-                        <option value="" class="bg-slate-900 text-white">All Sessions</option>
                         {#each data.sessions as session (session.id)}
                             <option value={session.id.toString()} class="bg-slate-900 text-white">{session.name}</option>
                         {/each}
                     </select>
 
-                    <select name="class" value={data.filters.class} class="rounded-xl border border-white/10 bg-white/5 py-2.5 pl-3 pr-8 text-sm text-white focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition">
-                        <option value="" class="bg-slate-900 text-white">All Classes</option>
-                        {#each ['5', '6', '7', '8', '9', '10', '11', '12'] as cls (cls)}
-                            <option value={cls} class="bg-slate-900 text-white">Class {cls}</option>
+                    <select 
+                        name="class" 
+                        value={currentClass} 
+                        onchange={handleClassChange}
+                        class="rounded-xl border border-white/10 bg-white/5 py-2.5 pl-3 pr-8 text-sm text-white focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition"
+                    >
+                        {#each data.classes as cls (cls.id)}
+                            <option value={cls.id.toString()} class="bg-slate-900 text-white">Class {cls.name}</option>
                         {/each}
                     </select>
 
-                    <select name="section" value={data.filters.section} class="rounded-xl border border-white/10 bg-white/5 py-2.5 pl-3 pr-8 text-sm text-white focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition">
-                        <option value="" class="bg-slate-900 text-white">All Sections</option>
-                        {#each ['A', 'B', 'C', 'D'] as sec (sec)}
-                            <option value={sec} class="bg-slate-900 text-white">Section {sec}</option>
+                    <select 
+                        name="section" 
+                        bind:value={currentSection}
+                        class="rounded-xl border border-white/10 bg-white/5 py-2.5 pl-3 pr-8 text-sm text-white focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition"
+                    >
+                        {#each sections as sec (sec.id)}
+                            <option value={sec.id.toString()} class="bg-slate-900 text-white">Section {sec.letter}</option>
                         {/each}
                     </select>
                     
@@ -135,7 +183,7 @@
         {#if data.filters.class}
             <a href="{resolve('/(app)/dashboard/students')}{removeFilterQs('class')}"
                class="group inline-flex items-center gap-1.5 rounded-lg bg-amber-500/15 px-3 py-1.5 text-xs font-medium text-amber-300 ring-1 ring-inset ring-amber-500/25 hover:bg-amber-500/25 hover:ring-amber-400/40 transition-all">
-                <span class="text-amber-400/70">Class:</span> {data.filters.class}
+                <span class="text-amber-400/70">Class:</span> {className}
                 <svg class="h-3.5 w-3.5 text-amber-400/50 group-hover:text-amber-300 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -144,7 +192,7 @@
         {#if data.filters.section}
             <a href="{resolve('/(app)/dashboard/students')}{removeFilterQs('section')}"
                class="group inline-flex items-center gap-1.5 rounded-lg bg-rose-500/15 px-3 py-1.5 text-xs font-medium text-rose-300 ring-1 ring-inset ring-rose-500/25 hover:bg-rose-500/25 hover:ring-rose-400/40 transition-all">
-                <span class="text-rose-400/70">Section:</span> {data.filters.section}
+                <span class="text-rose-400/70">Section:</span> {sectionLetter}
                 <svg class="h-3.5 w-3.5 text-rose-400/50 group-hover:text-rose-300 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
