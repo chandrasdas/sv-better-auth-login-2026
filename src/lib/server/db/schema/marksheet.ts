@@ -80,8 +80,12 @@ export const studSessionEnrollments = sqliteTable('stud_session_enrollments', {
   sectionId: integer('section_id').notNull().references(() => studSections.id),
   rollNo: integer('roll_no').notNull(),
 }, (table) => [
+  // Ensures a student can't be accidentally enrolled twice in the same year
   unique('uq_student_session').on(table.studentId, table.sessionId),
-  index('idx_enroll_student').on(table.studentId),
+
+  // Ensures no two students in the same class have the same Roll No.
+  // Also provides maximum performance for your Student List and Tabulation sheets.
+  unique('uq_class_roll').on(table.sessionId, table.sectionId, table.rollNo),
 ]);
 
 // --- Marks Entries ---
@@ -94,8 +98,9 @@ export const studMarksEntries = sqliteTable('stud_marks_entries', {
   createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
 }, (table) => [
-  // FIX: Prevents duplicate marks for same student/subject/term combo
+  // 1. Essential Protection: Prevents entering two marks for the same exam for one student
   unique('uq_marks_student_setup').on(table.sessionEnrollId, table.examSetupId),
-  index('idx_marks_enrollment').on(table.sessionEnrollId),
+  // 2. Performance: Essential for loading the "Mark Entry" or "Result Sheet" for a specific exam
   index('idx_marks_setup').on(table.examSetupId),
+  // Note: The index for sessionEnrollId is handled by the unique constraint above!
 ]);
