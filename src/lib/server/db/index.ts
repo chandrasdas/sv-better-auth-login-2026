@@ -8,4 +8,8 @@ const client = createClient({
 	authToken: env.DATABASE_AUTH_TOKEN
 });
 
+// Enable WAL mode and Foreign Keys for local libSQL/SQLite
+await client.execute('PRAGMA journal_mode = WAL;');
+await client.execute('PRAGMA foreign_keys = ON;');
+
 export const db = drizzle(client, { schema });
