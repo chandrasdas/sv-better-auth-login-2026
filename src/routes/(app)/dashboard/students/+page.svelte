@@ -1,42 +1,44 @@
 <script lang="ts">
-	import { getSections } from './students.remote';
-	import { resolve } from '$app/paths';
+	import { getSections, getFilteredStudents } from './students.remote';
 	import { fade } from 'svelte/transition';
-	import { SvelteURLSearchParams } from 'svelte/reactivity';
 	import { APP_NAME } from '$lib/config';
 
 	let { data } = $props();
-	let hasFilters = $derived(data.query || data.filters.session || data.filters.class || data.filters.section);
 
-	// Reactive state for dropdowns
+	// Reactive state for filters and list
+	// svelte-ignore state_referenced_locally
+	let currentQuery = $state(data.query || '');
+	// svelte-ignore state_referenced_locally
+	let currentSession = $state(data.filters.session);
+	// svelte-ignore state_referenced_locally
 	let currentClass = $state(data.filters.class);
-	let sections = $state(data.sections);
+	// svelte-ignore state_referenced_locally
 	let currentSection = $state(data.filters.section);
+	// svelte-ignore state_referenced_locally
+	let sections = $state(data.sections);
 
-	$effect(() => {
-		currentClass = data.filters.class;
-		sections = data.sections;
-		currentSection = data.filters.section;
-	});
+	// svelte-ignore state_referenced_locally
+	let students = $state(data.students);
+	// svelte-ignore state_referenced_locally
+	let currentPage = $state(data.page);
+	// svelte-ignore state_referenced_locally
+	let totalPages = $state(data.totalPages);
+	// svelte-ignore state_referenced_locally
+	let hasNextPage = $state(data.hasNextPage);
 
-	// Get the display names for the active filter badges
-	let sessionName = $derived(
-		data.filters.session
-			? data.sessions.find(s => s.id.toString() === data.filters.session)?.name ?? data.filters.session
-			: ''
-	);
-
-	let className = $derived(
-		data.filters.class
-			? data.classes.find(c => c.id.toString() === data.filters.class)?.name ?? data.filters.class
-			: ''
-	);
-
-	let sectionLetter = $derived(
-		data.filters.section
-			? data.sections.find(s => s.id.toString() === data.filters.section)?.letter ?? data.filters.section
-			: ''
-	);
+	async function fetchStudents(pageToFetch = 1) {
+		const result = await getFilteredStudents({
+			q: currentQuery,
+			session: currentSession,
+			class: currentClass,
+			section: currentSection,
+			page: pageToFetch
+		});
+		students = result.students;
+		currentPage = result.page;
+		totalPages = result.totalPages;
+		hasNextPage = result.hasNextPage;
+	}
 
 	async function handleClassChange(e: Event) {
 		const target = e.target as HTMLSelectElement;
@@ -55,18 +57,20 @@
 			sections = [];
 			currentSection = '';
 		}
+		fetchStudents(1);
 	}
 
-	// Returns only the query string (e.g. "?page=1&session=2") after removing keyToRemove.
-	function removeFilterQs(keyToRemove: string): string {
-		const params = new SvelteURLSearchParams();
-		if (keyToRemove !== 'q' && data.query) params.set('q', data.query);
-		if (keyToRemove !== 'session' && data.filters.session) params.set('session', data.filters.session);
-		if (keyToRemove !== 'class' && data.filters.class) params.set('class', data.filters.class);
-		if (keyToRemove !== 'section' && data.filters.section) params.set('section', data.filters.section);
-		params.set('page', '1');
-		const qs = params.toString();
-		return qs ? `?${qs}` : '';
+	async function handleSessionChange() {
+		currentClass = '';
+		currentSection = '';
+		sections = [];
+		fetchStudents(1);
+	}
+
+	function handleSearchInput() {
+		if (currentQuery.length >= 3 || currentQuery.length === 0) {
+			fetchStudents(1);
+		}
 	}
 </script>
 
@@ -95,7 +99,7 @@
         </div>
         
         <div class="relative z-10 w-full sm:w-auto">
-            <form action="" method="GET" class="flex flex-col gap-3">
+            <div class="flex flex-col gap-3">
                 <div class="flex flex-col sm:flex-row gap-3">
                     <div class="relative w-full sm:w-72">
                         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
@@ -105,8 +109,9 @@
                         </div>
                         <input 
                             type="search" 
-                            name="q"
-                            value={data.query || ''}
+                            bind:value={currentQuery}
+                            oninput={handleSearchInput}
+                            onkeydown={(e) => { if (e.key === 'Enter') fetchStudents(1); }}
                             placeholder="Search name or Portal ID..." 
                             class="block w-full rounded-xl border border-white/10 bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition"
                         >
@@ -114,92 +119,39 @@
                 </div>
                 
                 <div class="flex flex-wrap gap-3">
-                    <select name="session" value={data.filters.session} class="rounded-xl border border-white/10 bg-white/5 py-2.5 pl-3 pr-8 text-sm text-white focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition">
+                    <select bind:value={currentSession} onchange={handleSessionChange} class="rounded-xl border border-white/10 bg-white/5 py-2.5 pl-3 pr-8 text-sm text-white focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition">
                         {#each data.sessions as session (session.id)}
                             <option value={session.id.toString()} class="bg-slate-900 text-white">{session.name}</option>
                         {/each}
                     </select>
 
                     <select 
-                        name="class" 
-                        value={currentClass} 
+                        bind:value={currentClass} 
                         onchange={handleClassChange}
                         class="rounded-xl border border-white/10 bg-white/5 py-2.5 pl-3 pr-8 text-sm text-white focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition"
                     >
+                        <option value="" class="bg-slate-900 text-white">Select class</option>
                         {#each data.classes as cls (cls.id)}
-                            <option value={cls.id.toString()} class="bg-slate-900 text-white">Class {cls.name}</option>
+                            <option value={cls.id.toString()} class="bg-slate-900 text-white">{cls.name}</option>
                         {/each}
                     </select>
 
                     <select 
-                        name="section" 
                         bind:value={currentSection}
+                        onchange={() => fetchStudents(1)}
                         class="rounded-xl border border-white/10 bg-white/5 py-2.5 pl-3 pr-8 text-sm text-white focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition"
                     >
+                        <option value="" class="bg-slate-900 text-white">Select section</option>
                         {#each sections as sec (sec.id)}
                             <option value={sec.id.toString()} class="bg-slate-900 text-white">Section {sec.letter}</option>
                         {/each}
                     </select>
-                    
-                    <!-- We always submit page 1 when clicking the main search button -->
-                    <button type="submit" name="page" value="1" class="inline-flex items-center justify-center rounded-xl bg-indigo-500 hover:bg-indigo-400 px-5 py-2.5 text-sm font-semibold text-white shadow-xs transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-900">
-                        Filter
-                    </button>
-
-                    <a 
-                        href={resolve('/(app)/dashboard/students')} 
-                        class="inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-xs transition focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-slate-900 {hasFilters ? 'bg-slate-700 hover:bg-slate-600' : 'bg-slate-800 opacity-50 cursor-not-allowed pointer-events-none'}"
-                        aria-disabled={!hasFilters}
-                    >
-                        Clear
-                    </a>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
-    <!-- Active Filter Badges -->
-    {#if hasFilters}
-    <div class="mt-6 flex flex-wrap items-center gap-2" transition:fade={{ duration: 200 }}>
-        <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mr-1">Active filters:</span>
-        {#if data.query}
-            <a href="{resolve('/(app)/dashboard/students')}{removeFilterQs('q')}"
-               class="group inline-flex items-center gap-1.5 rounded-lg bg-indigo-500/15 px-3 py-1.5 text-xs font-medium text-indigo-300 ring-1 ring-inset ring-indigo-500/25 hover:bg-indigo-500/25 hover:ring-indigo-400/40 transition-all">
-                <span class="text-indigo-400/70">Search:</span> {data.query}
-                <svg class="h-3.5 w-3.5 text-indigo-400/50 group-hover:text-indigo-300 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </a>
-        {/if}
-        {#if data.filters.session}
-            <a href="{resolve('/(app)/dashboard/students')}{removeFilterQs('session')}"
-               class="group inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/15 px-3 py-1.5 text-xs font-medium text-emerald-300 ring-1 ring-inset ring-emerald-500/25 hover:bg-emerald-500/25 hover:ring-emerald-400/40 transition-all">
-                <span class="text-emerald-400/70">Session:</span> {sessionName}
-                <svg class="h-3.5 w-3.5 text-emerald-400/50 group-hover:text-emerald-300 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </a>
-        {/if}
-        {#if data.filters.class}
-            <a href="{resolve('/(app)/dashboard/students')}{removeFilterQs('class')}"
-               class="group inline-flex items-center gap-1.5 rounded-lg bg-amber-500/15 px-3 py-1.5 text-xs font-medium text-amber-300 ring-1 ring-inset ring-amber-500/25 hover:bg-amber-500/25 hover:ring-amber-400/40 transition-all">
-                <span class="text-amber-400/70">Class:</span> {className}
-                <svg class="h-3.5 w-3.5 text-amber-400/50 group-hover:text-amber-300 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </a>
-        {/if}
-        {#if data.filters.section}
-            <a href="{resolve('/(app)/dashboard/students')}{removeFilterQs('section')}"
-               class="group inline-flex items-center gap-1.5 rounded-lg bg-rose-500/15 px-3 py-1.5 text-xs font-medium text-rose-300 ring-1 ring-inset ring-rose-500/25 hover:bg-rose-500/25 hover:ring-rose-400/40 transition-all">
-                <span class="text-rose-400/70">Section:</span> {sectionLetter}
-                <svg class="h-3.5 w-3.5 text-rose-400/50 group-hover:text-rose-300 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </a>
-        {/if}
-    </div>
-    {/if}
+
 
     <!-- Data Table -->
     <div class="mt-8 flow-root">
@@ -218,10 +170,10 @@
 							</tr>
 						</thead>
 						<tbody class="divide-y divide-white/5 bg-transparent">
-							{#each data.students as student, i (student.sid)}
+							{#each students as student, i (student.sid)}
 							<tr class="transition hover:bg-white/4">
 								<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-slate-300 sm:pl-6">
-                                    {((data.page - 1) * 20) + (i + 1)}
+                                    {((currentPage - 1) * 80) + (i + 1)}
                                 </td>
 								<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-slate-300">
                                     <span class="inline-flex items-center rounded-md bg-indigo-400/10 px-2 py-1 text-xs font-medium text-indigo-400 ring-1 ring-inset ring-indigo-400/20">
@@ -238,7 +190,7 @@
 								</td>
 							</tr>
                             {/each}
-                            {#if data.students.length === 0}
+                            {#if students.length === 0}
                             <tr>
                                 <td colspan="6" class="px-6 py-16 text-center">
                                     <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-slate-800 text-slate-400 ring-1 ring-white/10 mb-4">
@@ -261,53 +213,39 @@
     <!-- Pagination -->
     <div class="mt-8 flex items-center justify-between">
         <p class="text-sm text-slate-400">
-            Page <span class="font-medium text-white">{data.page}</span> of <span class="font-medium text-white">{data.totalPages}</span>
+            Page <span class="font-medium text-white">{currentPage}</span> of <span class="font-medium text-white">{totalPages}</span>
         </p>
-        <form method="GET" class="flex gap-2">
-            <!-- Hidden inputs to preserve filters during pagination -->
-            <input type="hidden" name="q" value={data.query || ''} />
-            <input type="hidden" name="session" value={data.filters.session} />
-            <input type="hidden" name="class" value={data.filters.class} />
-            <input type="hidden" name="section" value={data.filters.section} />
-
+        <div class="flex gap-2">
             <button 
-                type="submit" 
-                name="page" 
-                value="1" 
-                disabled={data.page === 1}
+                onclick={() => fetchStudents(1)} 
+                disabled={currentPage === 1}
                 title="First Page"
                 class="hidden sm:inline-flex rounded-xl bg-white/5 px-4 py-2 text-sm font-medium text-slate-300 shadow-xs ring-1 ring-inset ring-white/10 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
                 First
             </button>
             <button 
-                type="submit" 
-                name="page" 
-                value={data.page - 1} 
-                disabled={data.page === 1}
+                onclick={() => fetchStudents(currentPage - 1)} 
+                disabled={currentPage === 1}
                 class="rounded-xl bg-white/5 px-4 py-2 text-sm font-medium text-white shadow-xs ring-1 ring-inset ring-white/10 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
                 Previous
             </button>
             <button 
-                type="submit" 
-                name="page" 
-                value={data.page + 1} 
-                disabled={!data.hasNextPage}
+                onclick={() => fetchStudents(currentPage + 1)} 
+                disabled={!hasNextPage}
                 class="rounded-xl bg-white/5 px-4 py-2 text-sm font-medium text-white shadow-xs ring-1 ring-inset ring-white/10 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
                 Next
             </button>
             <button 
-                type="submit" 
-                name="page" 
-                value={data.totalPages} 
-                disabled={data.page === data.totalPages}
+                onclick={() => fetchStudents(totalPages)} 
+                disabled={currentPage === totalPages}
                 title="Last Page"
                 class="hidden sm:inline-flex rounded-xl bg-white/5 px-4 py-2 text-sm font-medium text-slate-300 shadow-xs ring-1 ring-inset ring-white/10 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
                 Last
             </button>
-        </form>
+        </div>
     </div>
 </main>

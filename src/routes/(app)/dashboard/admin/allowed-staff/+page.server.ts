@@ -7,7 +7,6 @@ import { eq } from 'drizzle-orm';
 import { requireRole } from '$lib/server/auth-utils';
 import * as v from 'valibot';
 import { addAllowedStaffSchema, editAllowedStaffSchema, deleteAllowedStaffSchema } from '$lib/validations/allowed-staff';
-import * as v from 'valibot';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const user = requireRole(locals, 'admin');
