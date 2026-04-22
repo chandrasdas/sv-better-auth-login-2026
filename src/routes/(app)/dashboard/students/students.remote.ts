@@ -70,6 +70,9 @@ export const getFilteredStudents = query(
             name: studInfo.name,
             dob: studInfo.dob,
             fname: studInfo.fname,
+            className: studClasses.name,
+            sectionLetter: studSections.letter,
+            rollNo: studSessionEnrollments.rollNo,
         })
         .from(studInfo)
         .leftJoin(studSessionEnrollments, eq(studInfo.sid, studSessionEnrollments.studentId))

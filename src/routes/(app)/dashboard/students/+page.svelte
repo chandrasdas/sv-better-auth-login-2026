@@ -2,6 +2,7 @@
 	import { getSections, getFilteredStudents } from './students.remote';
 	import { fade } from 'svelte/transition';
 	import { APP_NAME } from '$lib/config';
+	import { resolve } from '$app/paths';
 
 	let { data } = $props();
 
@@ -164,6 +165,9 @@
 								<th scope="col" class="py-4 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6">SL</th>
 								<th scope="col" class="py-4 pl-4 pr-3 text-left text-sm font-semibold text-white">Portal ID</th>
 								<th scope="col" class="px-3 py-4 text-left text-sm font-semibold text-white">Name</th>
+								<th scope="col" class="px-3 py-4 text-left text-sm font-semibold text-white">Class</th>
+								<th scope="col" class="px-3 py-4 text-left text-sm font-semibold text-white">Section</th>
+								<th scope="col" class="px-3 py-4 text-left text-sm font-semibold text-white">Roll</th>
 								<th scope="col" class="px-3 py-4 text-left text-sm font-semibold text-white">DOB</th>
 								<th scope="col" class="px-3 py-4 text-left text-sm font-semibold text-white">Father's Name</th>
 								<th scope="col" class="px-3 py-4 text-left text-sm font-semibold text-white">Actions</th>
@@ -181,18 +185,21 @@
                                     </span>
                                 </td>
 								<td class="whitespace-nowrap px-3 py-4 text-sm text-slate-200 font-medium">{student.name}</td>
+								<td class="whitespace-nowrap px-3 py-4 text-sm text-slate-400">{student.className || '-'}</td>
+								<td class="whitespace-nowrap px-3 py-4 text-sm text-slate-400">{student.sectionLetter || '-'}</td>
+								<td class="whitespace-nowrap px-3 py-4 text-sm text-slate-400">{student.rollNo || '-'}</td>
 								<td class="whitespace-nowrap px-3 py-4 text-sm text-slate-400">{student.dob}</td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-slate-400">{student.fname}</td>
 								<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-left text-sm font-medium sm:pr-6">
-									<button class="text-indigo-400 hover:text-indigo-300 transition">
+									<a href={resolve(`/dashboard/students/${student.sid}`)} class="text-indigo-400 hover:text-indigo-300 transition inline-block">
                                         View Details
-                                    </button>
+                                    </a>
 								</td>
 							</tr>
                             {/each}
                             {#if students.length === 0}
                             <tr>
-                                <td colspan="6" class="px-6 py-16 text-center">
+                                <td colspan="9" class="px-6 py-16 text-center">
                                     <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-slate-800 text-slate-400 ring-1 ring-white/10 mb-4">
                                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
