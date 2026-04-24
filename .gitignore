@@ -7,8 +7,6 @@ node_modules
 .wrangler
 /.svelte-kit
 /build
-build.zip
-
 
 # OS
 .DS_Store
@@ -21,5 +19,15 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# database
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
+# misc
+*.zip
+
 
 
