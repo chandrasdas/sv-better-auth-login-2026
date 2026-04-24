@@ -1,0 +1,6 @@
+git update-index --skip-worktree sqlite1.db
+
+git update-index --no-skip-worktree sqlite1.db
+
+git ls-files -v | findstr "sqlite1.db"
+
