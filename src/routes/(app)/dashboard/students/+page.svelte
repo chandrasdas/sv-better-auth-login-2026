@@ -3,8 +3,9 @@
 	import { fade } from 'svelte/transition';
 	import { APP_NAME } from '$lib/config';
 	import { resolve } from '$app/paths';
+	import type { PageData } from './$types';
 
-	let { data } = $props();
+	let { data }: { data: PageData } = $props();
 
 	// Reactive state for filters and list
 	// svelte-ignore state_referenced_locally
