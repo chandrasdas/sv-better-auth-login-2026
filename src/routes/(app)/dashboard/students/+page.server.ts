@@ -51,6 +51,7 @@ export const load: PageServerLoad = async ({ url }) => {
         },
         page: studentData.page,
         totalPages: studentData.totalPages,
+        totalRecords: studentData.totalRecords,
         hasNextPage: studentData.hasNextPage
     };
 };

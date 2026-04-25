@@ -27,6 +27,8 @@
 	let totalPages = $state(data.totalPages);
 	// svelte-ignore state_referenced_locally
 	let hasNextPage = $state(data.hasNextPage);
+	// svelte-ignore state_referenced_locally
+	let totalRecords = $state(data.totalRecords);
 
 	async function fetchStudents(pageToFetch = 1) {
 		const result = await getFilteredStudents({
@@ -40,6 +42,7 @@
 		currentPage = result.page;
 		totalPages = result.totalPages;
 		hasNextPage = result.hasNextPage;
+		totalRecords = result.totalRecords;
 	}
 
 	async function handleClassChange(e: Event) {
@@ -98,29 +101,41 @@
         <div class="relative z-10 flex-1 mb-6 sm:mb-0">
             <h1 class="text-4xl font-bold tracking-tight text-white">Students Registry</h1>
             <p class="mt-3 max-w-2xl text-lg text-slate-400">Manage and search through the student records.</p>
+            <div class="mt-4 flex items-center gap-2">
+                <span class="relative flex h-2.5 w-2.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full {totalRecords === 0 ? 'bg-amber-400' : 'bg-emerald-400'} opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 {totalRecords === 0 ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]' : 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]'}"></span>
+                </span>
+                <span class="text-sm font-medium text-slate-300">
+                    Showing <strong class="text-white text-base">{totalRecords}</strong> students
+                </span>
+            </div>
         </div>
         
-        <div class="relative z-10 w-full sm:w-auto">
-            <div class="flex flex-col gap-3">
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <div class="relative w-full sm:w-72">
-                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </div>
-                        <input 
-                            type="search" 
-                            bind:value={currentQuery}
-                            oninput={handleSearchInput}
-                            onkeydown={(e) => { if (e.key === 'Enter') fetchStudents(1); }}
-                            placeholder="Search name or Portal ID..." 
-                            class="block w-full rounded-xl border border-white/10 bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition"
-                        >
+        <div class="relative z-10 w-full sm:w-auto mt-6 sm:mt-0">
+            <div class="flex flex-col items-end gap-4">
+                <!-- Search -->
+                <div class="relative w-full sm:w-72">
+                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
                     </div>
+                    <input 
+                        type="search" 
+                        bind:value={currentQuery}
+                        oninput={handleSearchInput}
+                        onkeydown={(e) => { if (e.key === 'Enter') fetchStudents(1); }}
+                        placeholder="Search name or Portal ID..." 
+                        class="block w-full rounded-xl border border-white/10 bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition"
+                    >
                 </div>
-                
-                <div class="flex flex-wrap gap-3">
+
+                <!-- Horizontal Separator -->
+                <div class="h-px w-full bg-white/10"></div>
+
+                <!-- Filters -->
+                <div class="flex flex-wrap justify-end gap-3 w-full sm:w-auto">
                     <select bind:value={currentSession} onchange={handleSessionChange} class="rounded-xl border border-white/10 bg-white/5 py-2.5 pl-3 pr-8 text-sm text-white focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition">
                         {#each data.sessions as session (session.id)}
                             <option value={session.id.toString()} class="bg-slate-900 text-white">{session.name}</option>

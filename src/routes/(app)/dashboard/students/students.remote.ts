@@ -87,6 +87,7 @@ export const getFilteredStudents = query(
             students: results,
             page,
             totalPages,
+            totalRecords,
             hasNextPage: page < totalPages
         };
     }
