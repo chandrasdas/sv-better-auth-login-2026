@@ -6,14 +6,14 @@
 			value: '2347',
 			trend: '18% Higher Than Last Month',
 			icon: 'M12 14l9-5-9-5-9 5 9 5z M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z M12 14v5',
-			gradient: 'from-blue-500 to-blue-500/90'
+			gradient: 'from-blue-500/80 to-blue-600/80'
 		},
 		{
 			title: 'Total Teachers',
 			value: '258',
 			trend: '21% Higher Than Last Month',
 			icon: 'M12 12a5 5 0 100-10 5 5 0 000 10zm-7 9a7 7 0 0114 0H5z',
-			gradient: 'from-emerald-500 to-emerald-500/90'
+			gradient: 'from-emerald-500/80 to-emerald-600/80'
 		},
 		{
 			title: 'Awards',
