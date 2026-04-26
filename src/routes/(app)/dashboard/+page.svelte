@@ -101,6 +101,22 @@
 				Configure Exams <svg class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
 			</div>
 		</a>
+
+		<!-- Admin: Marks Entry Card -->
+		<a href={resolve('/dashboard/admin/marks-entry')} class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/2 p-6 transition hover:bg-white/4 block">
+			<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10 text-orange-400 ring-1 ring-orange-500/20 group-hover:bg-orange-500/20 group-hover:text-orange-300 transition">
+				<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+				</svg>
+			</div>
+			<h3 class="font-semibold text-white">Marks Entry</h3>
+			<p class="mt-2 text-sm text-slate-400">
+				Enter and update student marks for any exam. Auto-saves as you type.
+			</p>
+			<div class="mt-4 flex items-center text-sm font-medium text-orange-400 opacity-0 transition-opacity group-hover:opacity-100">
+				Enter Marks <svg class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+			</div>
+		</a>
 		{/if}
 		<!-- Students Card -->
 		<a href={resolve('/dashboard/students')} class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/2 p-6 transition hover:bg-white/4 block">

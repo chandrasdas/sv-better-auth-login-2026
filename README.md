@@ -1,129 +1,177 @@
 # Darpan
 
-A beautiful, modern, and high-performance template built with **SvelteKit**, **Tailwind CSS v4**, and **[Better-Auth](https://better-auth.com/)**. Everything you need to launch your next big idea today.
+A modern, high-performance **school management web application** built with **SvelteKit**, **Tailwind CSS v4**, and **[Better-Auth](https://better-auth.com/)**. Darpan streamlines student records, exam configuration, and marks entry — all behind a secure, role-based dashboard.
 
-This project is configured to connect to an **SQLite** database using **Drizzle ORM**, and includes robust authentication features like email verification, password reset, and Role-Based Access Control (RBAC) specifically tailored for restricted staff access.
+The application uses a local **LibSQL/SQLite** database via **Drizzle ORM**, and includes robust authentication with email verification, password reset, and Role-Based Access Control (RBAC) tailored for restricted staff access.
 
 ## ✨ Features
 
-- **Role-Based Access Control (RBAC)**: Manage user roles (`staff`, `admin`, etc.) with built-in sessions.
-- **Restricted Staff Registration**: Only pre-authorized staff members (verified against a database table) can register for accounts.
-- **Email Verification**: Built-in Nodemailer utility with `better-auth` integration to mandate email verification before account creation.
-- **Password Management**: Fully functional "Forget Password" and password reset flows.
-- **Modern UI**: Styled with Tailwind CSS v4 for a premium and dynamic aesthetic.
+### Authentication & Access Control
+- **Role-Based Access Control (RBAC)**: Manage user roles (`staff`, `admin`) with session-based access.
+- **Restricted Staff Registration**: Only pre-authorized staff (verified against the `allowed_staff` table) can create accounts.
+- **Email Verification**: Nodemailer integration with `better-auth` to mandate email verification before account activation.
+- **Password Management**: Complete "Forgot Password" and password reset flows.
 
-## 🚀 Tech Stack & Dependencies
+### School Management
+- **Student Registry**: Searchable student records with filtering by session, class, and section. Paginated results with portal ID, roll number, class, and parent details.
+- **Exam Setup**: Admin panel to configure subjects per exam — set full marks, pass marks, sort order, and marksheet inclusion for each session/class/term combination.
+- **Marks Entry**: Real-time marks entry with auto-save on blur. Features include:
+  - Cascading dropdowns (Session → Class → Section → Term → Subject)
+  - "Mark All Present" toggle
+  - Auto-validation: marks exceeding full marks are highlighted red and blocked from saving
+  - Failed students (below pass marks) are highlighted in amber
+  - Live status indicators (student count, present count, failed count)
+- **Staff Data Entry**: Staff members can fill out and update their employment details.
 
-- **Framework**: [SvelteKit](https://kit.svelte.dev/) with Node adapter.
-- **Authentication**: `better-auth` and `@better-auth/cli` for secure, modern authentication.
-- **Database ORM**: `drizzle-orm` and `drizzle-kit` for schema management and type-safe database access.
-- **Database Driver**: `better-sqlite3` designed to interact with your SQLite database.
-- **Styling**: Tailwind CSS v4 (`tailwindcss`, `@tailwindcss/vite`, `@tailwindcss/forms`).
-- **Tooling**: Vite, TypeScript, ESLint, Prettier, `pnpm`.
-- **Mailing**: `nodemailer` for authentication emails.
+### UI & Developer Experience
+- **Premium Dark UI**: Glassmorphism cards, indigo accent system, smooth transitions, and micro-animations.
+- **Svelte 5 Runes**: Modern reactive state management with `$state`, `$derived`, and `$effect`.
+- **Server Queries**: Type-safe remote functions using SvelteKit's `query()` API with Valibot validation.
+
+## 🚀 Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Framework** | [SvelteKit](https://kit.svelte.dev/) (Svelte 5) with Node adapter |
+| **Styling** | Tailwind CSS v4 with `@tailwindcss/forms` |
+| **Authentication** | `better-auth` with RBAC plugin |
+| **Database** | LibSQL (local SQLite) via `@libsql/client` |
+| **ORM** | Drizzle ORM with Drizzle Kit |
+| **Validation** | Valibot |
+| **Email** | Nodemailer |
+| **Tooling** | Vite, TypeScript, ESLint, Prettier, pnpm |
 
 ## 📂 Project Structure
 
 ```text
-.
-├── src/
-│   ├── lib/
-│   │   ├── server/
-│   │   │   ├── auth.ts      # Better-Auth configuration (Plugins, RBAC)
-│   │   │   ├── db/          # Drizzle ORM schema and DB connection
-│   │   │   └── email.ts     # Nodemailer configuration
-│   │   └── assets/          # Shared components and client-side utilities
-│   ├── routes/              # SvelteKit pages, layouts, and API routes
-│   │   ├── about/           # About Us page
-│   │   ├── dashboard/       # Protected dashboard area
-│   │   ├── demo/            # Demo pages
-│   │   ├── forgot-password/ # Password reset flow
-│   │   ├── login/           # Login flow
-│   │   ├── register/        # Registration flow (Restricted)
-│   │   ├── +page.svelte     # Main application landing page
-│   │   └── +layout.svelte   # Top-level layout
-│   └── app.html             # Main HTML entry point
-├── static/                  # Static assets (images, fonts, etc.)
-├── .env                     # Environment variables (Database URL, Secrets)
-├── .env.example             # Example environment variable file
-├── drizzle.config.ts        # Configuration for Drizzle Kit commands
-├── svelte.config.js         # Configuration for SvelteKit and adapter
-├── vite.config.ts           # Vite development server configuration
-└── package.json             # Project dependencies and scripts
+src/
+├── lib/
+│   ├── config.ts                  # App-wide constants (APP_NAME)
+│   └── server/
+│       ├── auth.ts                # Better-Auth config (plugins, RBAC)
+│       ├── auth-utils.ts          # Auth helper utilities
+│       ├── email.ts               # Nodemailer configuration
+│       └── db/
+│           ├── index.ts           # Drizzle client (LibSQL + WAL mode)
+│           └── schema/
+│               ├── auth.ts        # Auth tables (user, session, account)
+│               ├── staff.ts       # Staff employment table
+│               ├── marksheet.ts   # Core schema: classes, sessions, sections,
+│               │                  #   subjects, exam setups, enrollments, marks
+│               └── relations.ts   # Drizzle relation definitions
+├── routes/
+│   ├── (app)/dashboard/
+│   │   ├── +page.svelte           # Dashboard with quick-action cards
+│   │   ├── students/              # Student registry (list + detail)
+│   │   │   ├── students.remote.ts # Server queries for filtering
+│   │   │   └── [id]/              # Individual student detail page
+│   │   ├── staff-entry/           # Staff data entry form
+│   │   └── admin/                 # Admin-only routes (role-guarded)
+│   │       ├── allowed-staff/     # Manage authorized staff list
+│   │       ├── exam-setup/        # Configure exam subjects & marks
+│   │       │   └── setup.remote.ts
+│   │       └── marks-entry/       # Enter student marks per exam
+│   │           └── marks-entry.remote.ts
+│   ├── login/                     # Login page
+│   ├── register/                  # Restricted registration
+│   ├── forgot-password/           # Password reset flow
+│   ├── about/                     # About page
+│   └── api/                       # API routes (auth handlers)
 ```
+
+## 🗄️ Database Schema
+
+```mermaid
+erDiagram
+    stud_sessions ||--o{ stud_exam_setups : has
+    stud_sessions ||--o{ stud_session_enrollments : has
+    stud_classes ||--o{ stud_sections : has
+    stud_classes ||--o{ stud_exam_setups : has
+    stud_exam_terms ||--o{ stud_exam_setups : has
+    stud_subjects ||--o{ stud_exam_setups : has
+    stud_info ||--o{ stud_session_enrollments : enrolls
+    stud_sections ||--o{ stud_session_enrollments : contains
+    stud_session_enrollments ||--o{ stud_marks_entries : has
+    stud_exam_setups ||--o{ stud_marks_entries : defines
+```
+
+**Key tables**: `stud_info` (students), `stud_session_enrollments` (class/section/roll per year), `stud_exam_setups` (subject config per exam), `stud_marks_entries` (individual marks with presence tracking).
 
 ## 🛠️ Getting Started
 
 ### 1. Prerequisites
 
-- Node.js installed (v20+ recommended).
-- No external database required (uses local SQLite).
-- `pnpm` installed globally.
+- **Node.js** v20+ recommended
+- **pnpm** installed globally (`npm i -g pnpm`)
+- No external database server required (uses local LibSQL/SQLite)
 
 ### 2. Environment Variables
 
-Create a `.env` file in the root of your project based on `.env.example`. Make sure to configure your database connection and Better-Auth secrets:
+Create a `.env` file in the project root:
 
 ```env
-# Database connection string
+# Database
 DATABASE_URL="file:./sqlite.db"
 
-# Better Auth required variables
+# Better Auth
 BETTER_AUTH_SECRET="your-strong-random-secret"
 BETTER_AUTH_URL="http://localhost:5173"
 
-# Email Configuration
+# Email (Nodemailer)
 EMAIL_USER="your-email@example.com"
 EMAIL_PASSWORD="your-email-password"
 ```
 
-### 3. Installation
-
-Install the project dependencies using `pnpm` (which is configured in this workspace):
+### 3. Install & Setup
 
 ```bash
+# Install dependencies
 pnpm install
-```
 
-### 4. Database Setup
-
-Once your `.env` is configured with your database credentials, run the Drizzle migrations to generate the auth schema in your remote database:
-
-```bash
 # Push schema to SQLite database
 pnpm db:push
 
-# Generate new migrations if you update the schema
-pnpm db:generate
+# (Optional) Sync Better-Auth schema with Drizzle
+pnpm auth:schema
 
-# Optionally, open Drizzle Studio to inspect the DB directly
+# (Optional) Open Drizzle Studio to inspect the DB
 pnpm db:studio
 ```
 
-To sync the `better-auth` schema with Drizzle, you can run:
-
-```bash
-pnpm auth:schema
-```
-
-### 5. Running the Application
-
-To start the Vite development server:
+### 4. Development
 
 ```bash
 pnpm dev
 ```
 
-Visit `http://localhost:5173` to test the template, login, and restricted registration functionality!
+Visit `http://localhost:5173` to access the application.
+
+### 5. Type Checking
+
+```bash
+pnpm check
+```
 
 ## 🚢 Deployment
 
-This project uses `@sveltejs/adapter-node` which is suitable for standard Node.js environments. For a cPanel environment, ensure your hosting plan supports Node.js applications (often managed via Passenger or similar tools).
-
-To build the production version, run:
+This project uses `@sveltejs/adapter-node`. To build for production:
 
 ```bash
 pnpm build
 ```
 
-Then start the server using the generated entry point in the `build` folder.
+Start the server using the generated entry point in the `build/` directory.
+
+## 📜 Available Scripts
+
+| Script | Description |
+|---|---|
+| `pnpm dev` | Start the Vite dev server |
+| `pnpm build` | Build for production |
+| `pnpm check` | Run Svelte & TypeScript checks |
+| `pnpm lint` | Run ESLint & Prettier checks |
+| `pnpm format` | Auto-format with Prettier |
+| `pnpm db:push` | Push Drizzle schema to database |
+| `pnpm db:generate` | Generate Drizzle migrations |
+| `pnpm db:studio` | Open Drizzle Studio GUI |
+| `pnpm auth:schema` | Sync Better-Auth schema to Drizzle |
