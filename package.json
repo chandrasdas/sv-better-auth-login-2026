@@ -17,6 +17,7 @@
 		"db:pull": "drizzle-kit pull",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
+		"db:introspect": "drizzle-kit introspect",
 		"auth:schema": "better-auth generate --config src/lib/server/auth.ts --output src/lib/server/db/schema/auth.ts --yes"
 	},
 	"devDependencies": {

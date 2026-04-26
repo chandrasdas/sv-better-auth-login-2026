@@ -57,16 +57,21 @@ export const studSections = sqliteTable('stud_sections', {
 
 // --- Exam Setups ---
 export const studExamSetups = sqliteTable('stud_exam_setups', {
-  setupId: integer('setup_id').primaryKey(),
+  setupId: integer('setup_id').primaryKey({ autoIncrement: true }),
   classId: integer('class_id').notNull().references(() => studClasses.id),
   sessionId: integer('session_id').notNull().references(() => studSessions.id),
   examTermId: integer('exam_term_id').notNull().references(() => studExamTerms.id),
   subjectId: integer('subject_id').notNull().references(() => studSubjects.id),
+  
+  includeInMarksheet: integer('include_in_marksheet', { mode: 'boolean' }).notNull().default(false),
+  includeInTotal: integer('include_in_total', { mode: 'boolean' }).notNull().default(false),
   fullMark: integer('full_mark').notNull(),
+  passMark: integer('pass_mark').notNull(),
+  sortIndex: integer('sort_index').notNull().default(0),
 }, (table) => [
   unique('uq_exam_config').on(
-    table.classId, 
     table.sessionId, 
+    table.classId, 
     table.examTermId, 
     table.subjectId
   ),

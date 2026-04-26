@@ -85,6 +85,22 @@
 				Manage Staff <svg class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
 			</div>
 		</a>
+
+		<!-- Admin: Exam Setup Card -->
+		<a href={resolve('/dashboard/admin/exam-setup')} class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/2 p-6 transition hover:bg-white/4 block">
+			<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-teal-500/10 text-teal-400 ring-1 ring-teal-500/20 group-hover:bg-teal-500/20 group-hover:text-teal-300 transition">
+				<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+				</svg>
+			</div>
+			<h3 class="font-semibold text-white">Exam Setup</h3>
+			<p class="mt-2 text-sm text-slate-400">
+				Configure full marks, pass marks, and other settings for exams across different classes.
+			</p>
+			<div class="mt-4 flex items-center text-sm font-medium text-teal-400 opacity-0 transition-opacity group-hover:opacity-100">
+				Configure Exams <svg class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+			</div>
+		</a>
 		{/if}
 		<!-- Students Card -->
 		<a href={resolve('/dashboard/students')} class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/2 p-6 transition hover:bg-white/4 block">
