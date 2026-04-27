@@ -34,8 +34,8 @@
 
 <div class="max-w-7xl mx-auto">
 	<div class="mb-8">
-		<h1 class="text-2xl font-bold text-slate-900 tracking-tight">Dashboard Overview</h1>
-		<p class="text-sm text-slate-500 mt-1">Here's a quick summary of the school's statistics.</p>
+		<h1 class="text-2xl font-bold text-slate-900 dark:text-slate-50 tracking-tight transition-colors">Dashboard Overview</h1>
+		<p class="text-sm text-slate-500 dark:text-slate-400 mt-1 transition-colors">Here's a quick summary of the school's statistics.</p>
 	</div>
 
 	<!-- Cards Grid -->
@@ -55,11 +55,11 @@
 	</div>
 	
 	<!-- Rest of the space blank for now -->
-	<div class="mt-8 border-2 border-dashed border-slate-200 rounded-xl p-12 text-center flex flex-col items-center justify-center opacity-50">
-		<svg class="h-12 w-12 text-slate-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+	<div class="mt-8 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl p-12 text-center flex flex-col items-center justify-center opacity-50 transition-colors">
+		<svg class="h-12 w-12 text-slate-400 dark:text-slate-500 mb-4 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
 		</svg>
-		<h3 class="text-lg font-medium text-slate-900">More widgets coming soon</h3>
-		<p class="text-sm text-slate-500 mt-1">This space is reserved for future charts and tables.</p>
+		<h3 class="text-lg font-medium text-slate-900 dark:text-slate-300 transition-colors">More widgets coming soon</h3>
+		<p class="text-sm text-slate-500 dark:text-slate-400 mt-1 transition-colors">This space is reserved for future charts and tables.</p>
 	</div>
 </div>
