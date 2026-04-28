@@ -284,21 +284,21 @@
 			<div class="flex flex-col items-end gap-4">
 				<!-- Row 1: Session, Term, Class -->
 				<div class="flex flex-wrap justify-end gap-3 w-full sm:w-auto">
-					<select bind:value={currentSession} onchange={handleSessionOrTermChange} class="rounded-xl border border-slate-200 dark:border-white/10 transition-colors bg-slate-100 dark:bg-white/5 transition-colors py-2.5 pl-3 pr-8 text-sm text-slate-900 dark:text-white transition-colors focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition">
+					<select bind:value={currentSession} onchange={handleSessionOrTermChange} class="rounded-xl border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 py-2.5 pl-3 pr-8 text-sm text-slate-900 dark:text-white focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors">
 						{#each data.sessions as session (session.id)}
-							<option value={session.id.toString()} class="bg-white dark:bg-slate-900 transition-colors text-slate-900 dark:text-white transition-colors">{session.name}</option>
+							<option value={session.id.toString()} class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white transition-colors">{session.name}</option>
 						{/each}
 					</select>
 
-					<select bind:value={currentTerm} onchange={handleSessionOrTermChange} class="rounded-xl border border-slate-200 dark:border-white/10 transition-colors bg-slate-100 dark:bg-white/5 transition-colors py-2.5 pl-3 pr-8 text-sm text-slate-900 dark:text-white transition-colors focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition">
+					<select bind:value={currentTerm} onchange={handleSessionOrTermChange} class="rounded-xl border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 py-2.5 pl-3 pr-8 text-sm text-slate-900 dark:text-white focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors">
 						{#each data.examTerms as term (term.id)}
-							<option value={term.id.toString()} class="bg-white dark:bg-slate-900 transition-colors text-slate-900 dark:text-white transition-colors">{term.name}</option>
+							<option value={term.id.toString()} class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white transition-colors">{term.name}</option>
 						{/each}
 					</select>
 
-					<select bind:value={currentClass} onchange={handleClassChange} class="rounded-xl border border-slate-200 dark:border-white/10 transition-colors bg-slate-100 dark:bg-white/5 transition-colors py-2.5 pl-3 pr-8 text-sm text-slate-900 dark:text-white transition-colors focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition">
+					<select bind:value={currentClass} onchange={handleClassChange} class="rounded-xl border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 py-2.5 pl-3 pr-8 text-sm text-slate-900 dark:text-white focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors">
 						{#each data.classes as cls (cls.id)}
-							<option value={cls.id.toString()} class="bg-white dark:bg-slate-900 transition-colors text-slate-900 dark:text-white transition-colors">{cls.name}</option>
+							<option value={cls.id.toString()} class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white transition-colors">{cls.name}</option>
 						{/each}
 					</select>
 				</div>
@@ -308,21 +308,21 @@
 
 				<!-- Row 2: Section, Subject -->
 				<div class="flex flex-wrap justify-end gap-3 w-full sm:w-auto">
-					<select bind:value={currentSection} onchange={handleSectionChange} class="rounded-xl border border-slate-200 dark:border-white/10 transition-colors bg-slate-100 dark:bg-white/5 transition-colors py-2.5 pl-3 pr-8 text-sm text-slate-900 dark:text-white transition-colors focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition">
+					<select bind:value={currentSection} onchange={handleSectionChange} class="rounded-xl border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 py-2.5 pl-3 pr-8 text-sm text-slate-900 dark:text-white focus:border-indigo-500 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors">
 						{#if sections.length === 0}
-							<option value="" class="bg-white dark:bg-slate-900 transition-colors text-slate-900 dark:text-white transition-colors">No sections</option>
+							<option value="" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white transition-colors">No sections</option>
 						{/if}
 						{#each sections as sec (sec.id)}
-							<option value={sec.id.toString()} class="bg-white dark:bg-slate-900 transition-colors text-slate-900 dark:text-white transition-colors">Section {sec.letter}</option>
+							<option value={sec.id.toString()} class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white transition-colors">Section {sec.letter}</option>
 						{/each}
 					</select>
 
-					<select bind:value={currentSubject} onchange={handleSubjectChange} class="rounded-xl border-2 border-indigo-500/60 bg-indigo-50 dark:bg-indigo-500/10 py-2.5 pl-3 pr-8 text-sm font-semibold text-slate-900 dark:text-white transition-colors focus:border-indigo-400 focus:bg-indigo-100 dark:bg-indigo-500/15 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition shadow-[0_0_12px_rgba(99,102,241,0.15)]">
+					<select bind:value={currentSubject} onchange={handleSubjectChange} class="rounded-xl border-2 border-indigo-500/60 bg-indigo-50 dark:bg-indigo-500/10 py-2.5 pl-3 pr-8 text-sm font-semibold text-slate-900 dark:text-white transition-colors focus:border-indigo-400 focus:bg-indigo-100 focus:dark:bg-indigo-500/15 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 shadow-[0_0_12px_rgba(99,102,241,0.15)]">
 						{#if subjects.length === 0}
-							<option value="" class="bg-white dark:bg-slate-900 transition-colors text-slate-900 dark:text-white transition-colors">No subjects configured</option>
+							<option value="" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white transition-colors">No subjects configured</option>
 						{/if}
 						{#each subjects as sub (sub.setupId)}
-							<option value={sub.setupId.toString()} class="bg-white dark:bg-slate-900 transition-colors text-slate-900 dark:text-white transition-colors">{sub.subjectName}</option>
+							<option value={sub.setupId.toString()} class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white transition-colors">{sub.subjectName}</option>
 						{/each}
 					</select>
 				</div>
@@ -334,7 +334,7 @@
 	<div class="mt-8 flow-root">
 		<div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
 			<div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-				<div class="overflow-hidden rounded-3xl border border-slate-200 dark:border-white/5 transition-colors bg-white dark:bg-white/2 shadow-sm dark:shadow-none transition-colors shadow-2xl ring-1 ring-slate-200 dark:ring-white/5">
+				<div class="overflow-hidden rounded-3xl border border-slate-200 dark:border-white/5 bg-white dark:bg-white/2 dark:shadow-none shadow-2xl ring-1 ring-slate-200 dark:ring-white/5 transition-colors">
 					<table class="min-w-full divide-y divide-slate-200 dark:divide-white/5">
 						<thead class="bg-slate-100 dark:bg-white/5 transition-colors">
 							<tr>
@@ -347,7 +347,7 @@
 											checked={allPresent}
 											onchange={toggleAllPresent}
 											title="Mark all present / absent"
-											class="h-4 w-4 rounded border-slate-200 dark:border-white/10 transition-colors bg-slate-100 dark:bg-white/5 transition-colors text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 transition cursor-pointer"
+											class="h-4 w-4 rounded border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 transition-colors cursor-pointer"
 										>
 										<span>Present</span>
 									</div>
@@ -360,7 +360,7 @@
 						</thead>
 						<tbody class="divide-y divide-slate-200 dark:divide-white/5 bg-white dark:bg-transparent">
 							{#each students as student (student.seid)}
-								<tr class="transition hover:bg-slate-200 dark:hover:bg-white/10 transition-colors even:bg-slate-50 dark:even:bg-white/2 transition-colors">
+								<tr class="hover:bg-slate-200 dark:hover:bg-white/10 even:bg-slate-50 dark:even:bg-white/2 transition-colors">
 									<td class="whitespace-nowrap py-2.5 pl-4 pr-3 text-sm font-bold text-slate-700 dark:text-slate-200 transition-colors sm:pl-6 tabular-nums">
 										{student.rollNo}
 									</td>
@@ -373,7 +373,7 @@
 											bind:checked={student.isPresent}
 											onchange={() => handlePresentToggle(student)}
 											tabindex={-1}
-											class="h-5 w-5 rounded border-slate-200 dark:border-white/10 transition-colors bg-slate-100 dark:bg-white/5 transition-colors text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 transition cursor-pointer mx-auto"
+											class="h-5 w-5 rounded border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 transition-colors cursor-pointer mx-auto"
 										>
 									</td>
 									<td class="whitespace-nowrap px-3 py-2.5 text-sm">
@@ -384,7 +384,7 @@
 											onblur={() => handleMarkBlur(student)}
 											disabled={!student.isPresent}
 											placeholder="0"
-											class="block w-full rounded-xl py-1.5 px-3 text-sm placeholder-slate-500 focus:outline-none focus:ring-1 transition disabled:opacity-30 disabled:cursor-not-allowed tabular-nums {saveStatus[student.seid] === 'warning' ? 'border-2 border-rose-500 bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 ring-rose-500/30 focus:border-rose-400 focus:ring-rose-500' : isFailed(student) ? 'border border-amber-500/50 bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 focus:border-amber-400 focus:bg-amber-100 dark:focus:bg-amber-500/15 focus:ring-amber-500' : 'border border-slate-200 dark:border-white/10 transition-colors bg-slate-100 dark:bg-white/5 transition-colors text-slate-900 dark:text-white transition-colors focus:border-indigo-500 focus:bg-white/10 focus:ring-indigo-500'}"
+											class="block w-full rounded-xl py-1.5 px-3 text-sm placeholder-slate-500 focus:outline-none focus:ring-1 transition disabled:opacity-30 disabled:cursor-not-allowed tabular-nums {saveStatus[student.seid] === 'warning' ? 'border-2 border-rose-500 bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 ring-rose-500/30 focus:border-rose-400 focus:ring-rose-500' : isFailed(student) ? 'border border-amber-500/50 bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 focus:border-amber-400 focus:bg-amber-100 dark:focus:bg-amber-500/15 focus:ring-amber-500' : 'border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-slate-900 dark:text-white focus:border-indigo-500 focus:bg-white/10 focus:ring-indigo-500 transition-colors'}"
 										>
 									</td>
 									<td class="whitespace-nowrap px-1 py-2.5 text-center w-10">
