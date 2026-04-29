@@ -83,7 +83,7 @@
 
 						<div class="flex items-center gap-3 pt-2">
 							<input type="checkbox" id="isAllowed" name="isAllowed" checked
-								class="h-5 w-5 rounded border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-purple-500 transition-colors focus:ring-purple-500 focus:ring-offset-slate-950" />
+								class="h-5 w-5 rounded border-slate-200 dark:border-white/10 text-purple-500 transition-colors focus:ring-purple-500 focus:ring-offset-slate-950" />
 							<label for="isAllowed" class="text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors">Is Allowed to Register</label>
 						</div>
 
@@ -143,7 +143,7 @@
 																<option value="admin">Admin</option>
 															</select>
 															<div class="flex items-center gap-2 px-1">
-																<input type="checkbox" name="isAllowed" id="edit-allow-{staff.id}" checked={staff.isAllowed} class="h-4 w-4 rounded border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 text-purple-500 transition-colors focus:ring-purple-500 focus:ring-offset-slate-900" />
+																<input type="checkbox" name="isAllowed" id="edit-allow-{staff.id}" checked={staff.isAllowed} class="h-4 w-4 rounded border-slate-200 dark:border-white/10 text-purple-500 transition-colors focus:ring-purple-500 focus:ring-offset-slate-900" />
 																<label for="edit-allow-{staff.id}" class="text-xs">Allowed</label>
 															</div>
 														</div>

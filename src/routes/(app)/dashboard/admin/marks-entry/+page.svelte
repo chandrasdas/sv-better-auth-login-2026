@@ -347,7 +347,7 @@
 											checked={allPresent}
 											onchange={toggleAllPresent}
 											title="Mark all present / absent"
-											class="h-4 w-4 rounded border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 transition-colors cursor-pointer"
+											class="h-4 w-4 rounded border-slate-200 dark:border-white/10 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 transition-colors cursor-pointer"
 										>
 										<span>Present</span>
 									</div>
@@ -373,7 +373,7 @@
 											bind:checked={student.isPresent}
 											onchange={() => handlePresentToggle(student)}
 											tabindex={-1}
-											class="h-5 w-5 rounded border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 transition-colors cursor-pointer mx-auto"
+											class="h-5 w-5 rounded border-slate-200 dark:border-white/10 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 transition-colors cursor-pointer mx-auto"
 										>
 									</td>
 									<td class="whitespace-nowrap px-3 py-2.5 text-sm">

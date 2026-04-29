@@ -191,7 +191,7 @@
 									<input 
 										type="checkbox"
 										bind:checked={includeMarksheetInputs[subject.id]}
-										class="h-5 w-5 rounded border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 mx-auto transition-colors"
+										class="h-5 w-5 rounded border-slate-200 dark:border-white/10 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 mx-auto transition-colors"
 									>
 								</td>
 								<td class="whitespace-nowrap px-3 py-2 text-sm text-slate-500 dark:text-slate-400 transition-colors text-center">
@@ -199,7 +199,7 @@
 										type="checkbox"
 										bind:checked={includeInputs[subject.id]}
 										disabled={!includeMarksheetInputs[subject.id]}
-										class="h-5 w-5 rounded border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 mx-auto disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+										class="h-5 w-5 rounded border-slate-200 dark:border-white/10 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 mx-auto disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
 									>
 								</td>
 								<td class="whitespace-nowrap px-3 py-2 text-sm text-slate-500 dark:text-slate-400 transition-colors">
