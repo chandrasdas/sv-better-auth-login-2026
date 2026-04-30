@@ -35,7 +35,7 @@
     </nav>
 
     <!-- Profile Header Card -->
-    <div class="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-white/10 transition-colors bg-slate-100 dark:bg-white/5 transition-colors p-8 shadow-2xl backdrop-blur-xl mb-8" in:fly={{ y: 20, duration: 500, delay: 100 }}>
+    <div class="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-white/10 transition-colors bg-slate-100 dark:bg-white/5 transition-colors p-8 shadow-sm backdrop-blur-xl mb-8" in:fly={{ y: 20, duration: 500, delay: 100 }}>
         <!-- Glow effects -->
         <div class="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-indigo-500/20 blur-[100px]"></div>
         <div class="absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-blue-50 dark:bg-blue-500/10 blur-[100px]"></div>

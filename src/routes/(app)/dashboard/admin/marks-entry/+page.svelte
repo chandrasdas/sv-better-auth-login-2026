@@ -250,7 +250,7 @@
 
 <main class="mx-auto min-h-[101vh] max-w-7xl px-4 py-12 sm:px-6 lg:px-8" in:fade={{ duration: 400 }}>
 	<!-- Header Section -->
-	<div class="mb-10 sm:flex sm:items-start sm:justify-between relative overflow-hidden rounded-3xl border border-slate-200 dark:border-white/5 transition-colors bg-linear-to-b from-slate-100 dark:from-white/5 to-transparent p-8 shadow-2xl">
+	<div class="mb-10 sm:flex sm:items-start sm:justify-between relative overflow-hidden rounded-3xl border border-slate-200 dark:border-white/5 transition-colors bg-linear-to-b from-slate-100 dark:from-white/5 to-transparent p-8 shadow-sm">
 		<div class="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-indigo-50 dark:bg-indigo-500/10 blur-[80px]"></div>
 		<div class="relative z-10 flex-1 mb-6 sm:mb-0">
 			<h1 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white transition-colors">Marks Entry</h1>

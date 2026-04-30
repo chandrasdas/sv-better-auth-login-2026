@@ -56,7 +56,7 @@
 				</div>
 			</div>
 		{:else}
-			<div class="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-white/5 transition-colors bg-white dark:bg-white/2 shadow-sm dark:shadow-none transition-colors p-6 sm:p-10 shadow-2xl backdrop-blur-xl">
+			<div class="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-white/5 transition-colors bg-white dark:bg-white/2 shadow-sm dark:shadow-none transition-colors p-6 sm:p-10 backdrop-blur-xl">
 				<div class="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-indigo-50 dark:bg-indigo-500/10 blur-[80px] pointer-events-none"></div>
 				
 				<form method="POST" class="relative z-10 space-y-6" use:enhance={() => {
